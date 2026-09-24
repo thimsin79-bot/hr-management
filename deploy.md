@@ -6,11 +6,13 @@ This document walks through getting **People Desk** (an HR management app in a s
 
 ```
 hr-management.html   the whole app (HTML/CSS/JS, data in localStorage)
-vercel.js            Vercel serverless function that serves the HTML
+api/vercel.js        Vercel serverless function that serves the HTML
 vercel.json          routes every path to the function
 ```
 
-Because there is no build step and no backend API, deployment is trivial. `vercel.js` reads `hr-management.html` and returns it; `vercel.json` maps all routes to that function.
+Because there is no build step and no backend API, deployment is trivial. `api/vercel.js` reads `hr-management.html` and returns it; `vercel.json` maps all routes to that function.
+
+> Note: Vercel only auto-detects serverless functions inside `/api`. Older versions of this repo placed the function at the root, which produced a 404 — keep it in `api/`.
 
 ## Prerequisites
 

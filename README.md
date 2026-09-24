@@ -34,7 +34,7 @@ npx serve .
 
 The app deploys to Vercel as a serverless function that serves the HTML file.
 
-- `vercel.js` – the serverless function entry point
+- `api/vercel.js` – the serverless function entry point
 - `vercel.json` – routes all traffic to the function
 
 ### With the Vercel CLI

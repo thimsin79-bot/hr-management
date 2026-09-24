@@ -1,11 +1,11 @@
 {
   "version": 2,
   "functions": {
-    "vercel.js": {
+    "api/vercel.js": {
       "runtime": "nodejs20.x"
     }
   },
   "routes": [
-    { "src": "/(.*)", "dest": "/vercel.js" }
+    { "src": "/(.*)", "dest": "/api/vercel.js" }
   ]
 }
