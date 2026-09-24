@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>People Desk – HR Management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,700&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#FFFFFF;--surface:#FFFFFF;--ink:#1A1F1D;--muted:#666E6B;--line:#E6E8E7;
+  --side:#FFFFFF;--side-ink:#3D4643;--side-hi:#F3F5F4;
+  --accent:#1F6F5C;--accent-ink:#FFFFFF;--accent-soft:#DCEFE6;
+  --amber:#8A5E00;--amber-bg:#FBEFD0;--red:#A63A27;--red-bg:#F7DFD8;--blue:#245F80;--blue-bg:#DCEAF2;--mute-bg:#F4F5F4;
+  --shadow:0 1px 2px rgba(0,0,0,.04);
+  box-sizing:border-box;
+  padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#0E1714;--surface:#16221E;--ink:#E6EFEA;--muted:#93A39C;--line:#25362E;
+    --side:#0A110F;--side-ink:#B9CCC4;--side-hi:#16261F;
+    --accent:#4FB79A;--accent-ink:#0A110F;--accent-soft:#1B3A31;
+    --amber:#E6B85A;--amber-bg:#3A2E10;--red:#E58C7A;--red-bg:#3C1F19;--blue:#7FB6D6;--blue-bg:#1B3242;--mute-bg:#212F29;--shadow:none;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0E1714;--surface:#16221E;--ink:#E6EFEA;--muted:#93A39C;--line:#25362E;
+  --side:#0A110F;--side-ink:#B9CCC4;--side-hi:#16261F;
+  --accent:#4FB79A;--accent-ink:#0A110F;--accent-soft:#1B3A31;
+  --amber:#E6B85A;--amber-bg:#3A2E10;--red:#E58C7A;--red-bg:#3C1F19;--blue:#7FB6D6;--blue-bg:#1B3242;--mute-bg:#212F29;--shadow:none;
+}
+html{background:#fff;scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:400 15px/1.5 "Instrument Sans",system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3{font-family:"Bricolage Grotesque","Instrument Sans",system-ui,sans-serif;margin:0;letter-spacing:-.01em}
+button,input,select{font:inherit;color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.app{display:grid;grid-template-columns:248px minmax(0,1fr);min-height:100vh}
+.side{background:var(--side);border-right:1px solid var(--line);color:var(--side-ink);position:sticky;top:0;height:100vh;overflow-y:auto;padding:18px 12px 24px;display:flex;flex-direction:column;gap:14px}
+.brand{display:flex;align-items:center;gap:10px;padding:4px 10px 8px}
+.brand .mark{width:30px;height:30px;border-radius:9px;background:#E9C46A;color:#14342D;display:grid;place-items:center;font:700 15px "Bricolage Grotesque",sans-serif}
+.brand b{font:700 17px "Bricolage Grotesque",sans-serif;color:var(--ink)}
+.brand small{display:block;color:var(--side-ink);opacity:.7;font-size:12px;margin-top:-2px}
+nav{display:flex;flex-direction:column;gap:2px}
+nav button{display:flex;align-items:center;gap:11px;width:100%;text-align:left;background:none;border:0;color:inherit;padding:9px 10px;border-radius:9px;cursor:pointer}
+nav button svg{width:18px;height:18px;flex:none;stroke:currentColor;fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;opacity:.85}
+nav button:hover{background:var(--side-hi)}
+nav button[aria-current="page"]{background:var(--accent-soft);color:var(--accent);font-weight:600}
+nav button[aria-current="page"] svg{opacity:1}
+.badge{margin-left:auto;background:var(--mute-bg);color:var(--ink);border-radius:99px;font-size:12px;padding:0 7px;min-width:20px;text-align:center}
+nav button[aria-current="page"] .badge{background:#fff;color:var(--accent)}
+.main-wrap{min-width:0}
+.top{display:flex;align-items:center;gap:12px;padding:16px 28px;border-bottom:1px solid var(--line);background:var(--surface);position:sticky;top:0;z-index:5}
+.top h1{font-size:22px}
+.top .date{color:var(--muted);margin-left:auto;font-size:14px}
+.menu{display:none;background:none;border:1px solid var(--line);border-radius:8px;width:38px;height:38px;cursor:pointer}
+main{padding:24px 28px 60px;max-width:1240px}
+.lead{color:var(--muted);margin:0 0 20px;max-width:64ch}
+.bar-tools{display:flex;flex-wrap:wrap;gap:10px;align-items:center;margin-bottom:16px}
+.bar-tools .grow{flex:1}
+.btn{background:var(--accent);color:var(--accent-ink);border:0;border-radius:9px;padding:8px 14px;font-weight:600;cursor:pointer}
+.btn:hover{filter:brightness(1.08)}
+.btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line)}
+.btn.ghost:hover{background:var(--mute-bg)}
+.btn.sm{padding:4px 10px;font-size:13px;border-radius:7px}
+.btn.bad{background:transparent;color:var(--red);border:1px solid var(--line)}
+input,select{background:var(--surface);border:1px solid var(--line);border-radius:9px;padding:8px 10px;min-width:0}
+input[type=range]{padding:0;accent-color:var(--accent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
+.panel>h3{padding:14px 18px 0;font-size:16px}
+.panel .pb{padding:14px 18px 18px}
+.tw{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:560px}
+th{text-align:left;font-weight:500;color:var(--muted);font-size:13px;padding:10px 16px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:11px 16px;border-bottom:1px solid var(--line);vertical-align:middle}
+tr:last-child td{border-bottom:0}
+tr.click{cursor:pointer}
+tr.click:hover td{background:var(--mute-bg)}
+td.r,th.r{text-align:right}
+.who{display:flex;align-items:center;gap:11px}
+.who b{display:block;font-weight:600}
+.who small{color:var(--muted);display:block;font-size:13px;line-height:1.3}
+.av{width:34px;height:34px;border-radius:50%;display:grid;place-items:center;font-weight:600;font-size:13px;color:#fff;flex:none}
+.pill{display:inline-block;border-radius:99px;padding:1px 10px;font-size:13px;font-weight:500;white-space:nowrap}
+.pill.ok{background:var(--accent-soft);color:var(--accent)}
+.pill.warn{background:var(--amber-bg);color:var(--amber)}
+.pill.bad{background:var(--red-bg);color:var(--red)}
+.pill.info{background:var(--blue-bg);color:var(--blue)}
+.pill.mute{background:var(--mute-bg);color:var(--muted)}
+.empty{padding:30px 18px;text-align:center;color:var(--muted)}
+.grid2{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);gap:18px;align-items:start}
+.grid3{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:16px}
+.strip{display:flex;flex-wrap:wrap;background:var(--surface);border:1px solid var(--line);border-radius:12px;margin-bottom:18px}
+.strip>div{flex:1 1 150px;padding:14px 20px;border-right:1px solid var(--line)}
+.strip>div:last-child{border-right:0}
+.strip b{display:block;font:700 28px/1.1 "Bricolage Grotesque",sans-serif}
+.strip span{color:var(--muted);font-size:14px}
+.queue{list-style:none;margin:0;padding:0}
+.queue li{display:flex;gap:12px;align-items:center;padding:12px 18px;border-top:1px solid var(--line)}
+.queue li:first-child{border-top:0}
+.queue .tx{flex:1;min-width:0}
+.queue .tx small{display:block;color:var(--muted)}
+.acts{display:flex;gap:6px;flex-wrap:wrap}
+.hb{display:grid;grid-template-columns:110px 1fr 64px;gap:10px;align-items:center;margin:9px 0;font-size:14px}
+.hb i{display:block;height:12px;border-radius:6px;background:var(--accent)}
+.hb .tr{background:var(--mute-bg);border-radius:6px}
+.hb b{text-align:right;font-weight:600}
+.kan{display:grid;grid-template-columns:repeat(5,minmax(210px,1fr));gap:12px;overflow-x:auto;padding-bottom:8px}
+.col{background:var(--mute-bg);border-radius:12px;padding:10px;min-height:160px}
+.col h3{font-size:14px;padding:2px 4px 8px;display:flex;justify-content:space-between}
+.col h3 span{color:var(--muted);font-family:"Instrument Sans",sans-serif;font-weight:500}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 12px;margin-bottom:8px}
+.card b{display:block}
+.card small{color:var(--muted)}
+.card .mv{display:flex;justify-content:space-between;margin-top:8px}
+.prog{height:8px;background:var(--mute-bg);border-radius:5px;overflow:hidden;min-width:90px}
+.prog i{display:block;height:100%;background:var(--accent)}
+.chk{display:flex;gap:10px;align-items:center;padding:6px 0;cursor:pointer}
+.chk input{width:18px;height:18px;accent-color:var(--accent)}
+.chk.done span{color:var(--muted);text-decoration:line-through}
+.hdr{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:10px}
+.steps{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px}
+.steps span{padding:4px 14px;border-radius:99px;background:var(--mute-bg);color:var(--muted);font-weight:500}
+.steps span.on{background:var(--accent);color:var(--accent-ink)}
+.set{display:grid;grid-template-columns:minmax(0,1fr) 220px;gap:10px 20px;align-items:center;padding:12px 0;border-top:1px solid var(--line)}
+.set:first-child{border-top:0}
+.set small{display:block;color:var(--muted)}
+dialog{border:1px solid var(--line);border-radius:14px;padding:0;background:var(--surface);color:var(--ink);width:min(480px,calc(100vw - 32px));box-shadow:0 20px 60px rgba(0,0,0,.3)}
+dialog::backdrop{background:rgba(10,20,16,.5)}
+.mh{display:flex;justify-content:space-between;align-items:center;padding:16px 20px 4px}
+.mb{padding:8px 20px;display:grid;gap:12px}
+.mb label{display:grid;gap:4px;font-weight:500;font-size:14px}
+.mb label input,.mb label select{width:100%}
+.mf{display:flex;justify-content:flex-end;gap:8px;padding:12px 20px 18px}
+.x{background:none;border:0;font-size:18px;cursor:pointer;color:var(--muted)}
+.kv{display:grid;grid-template-columns:120px 1fr;gap:6px 12px;padding:8px 0}
+.kv dt{color:var(--muted)}.kv dd{margin:0}
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:var(--bg);padding:9px 16px;border-radius:9px;opacity:0;pointer-events:none;transition:opacity .2s;z-index:50;max-width:90vw}
+#toast.show{opacity:1}
+.scrim{display:none}
+@media (max-width:980px){
+  .app{grid-template-columns:minmax(0,1fr)}
+  .side{position:fixed;left:0;top:0;bottom:0;width:260px;z-index:20;transform:translateX(-100%);transition:transform .2s;padding-top:calc(18px + env(safe-area-inset-top,0px))}
+  .side.open{transform:none}
+  .scrim.open{display:block;position:fixed;inset:0;background:rgba(10,20,16,.45);z-index:15}
+  .menu{display:grid;place-items:center}
+  .grid2{grid-template-columns:minmax(0,1fr)}
+  .top,main{padding-left:16px;padding-right:16px}
+  .top .date{display:none}
+  .set{grid-template-columns:minmax(0,1fr)}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="app">
+  <aside class="side" id="side" aria-label="Main navigation">
+    <div class="brand"><div class="mark">P</div><div><b>People Desk</b><small id="co"></small></div></div>
+    <nav id="nav"></nav>
+  </aside>
+  <div class="scrim" id="scrim" data-a="menu"></div>
+  <div class="main-wrap">
+    <header class="top">
+      <button class="menu" data-a="menu" aria-label="Open navigation"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
+      <h1 id="title">Dashboard</h1>
+      <span class="date" id="today"></span>
+    </header>
+    <main id="main"></main>
+  </div>
+</div>
+<dialog id="dlg"></dialog>
+<div id="toast" role="status"></div>
+
+<script>
+const TODAY='2026-09-24';
+const $=(s,r=document)=>r.querySelector(s);
+const esc=s=>String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const money=n=>'$'+Math.round(n).toLocaleString('en-US');
+const fdate=d=>d?new Date(d+'T00:00:00Z').toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric',timeZone:'UTC'}):'–';
+const nid=a=>Math.max(0,...a.map(x=>x.id))+1;
+const tomin=t=>{const p=(t||'0:0').split(':');return +p[0]*60+ +p[1]};
+const nowHM=()=>new Date().toTimeString().slice(0,5);
+function wd(a,b){let d=new Date(a+'T00:00:00Z'),e=new Date(b+'T00:00:00Z'),n=0;while(d<=e){const g=d.getUTCDay();if(g&&g!==6)n++;d.setUTCDate(d.getUTCDate()+1)}return Math.max(n,1)}
+
+const ICONS={
+dashboard:'M3 3h7v9H3zM14 3h7v5h-7zM14 12h7v9h-7zM3 16h7v5H3z',
+employees:'M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75',
+organization:'M9 3h6v5H9zM3 16h6v5H3zM15 16h6v5h-6zM12 8v4M6 16v-4h12v4',
+recruitment:'M11 19a8 8 0 1 0 0-16 8 8 0 0 0 0 16M21 21l-4.3-4.3',
+onboarding:'M9 11l3 3L22 4M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11',
+attendance:'M12 22a10 10 0 1 0 0-20 10 10 0 0 0 0 20M12 6v6l4 2',
+leave:'M3 6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2zM16 2v4M8 2v4M3 10h18',
+payroll:'M12 1v22M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6',
+performance:'M22 12h-4l-3 9L9 3l-3 9H2',
+training:'M4 19.5A2.5 2.5 0 0 1 6.5 17H20V2H6.5A2.5 2.5 0 0 0 4 4.5zM4 19.5V22h16',
+benefits:'M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.7l-1-1.1a5.5 5.5 0 0 0-7.8 7.8l1 1.1L12 21.2l7.8-7.7 1-1.1a5.5 5.5 0 0 0 0-7.8z',
+documents:'M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8zM14 2v6h6M8 13h8M8 17h8',
+relations:'M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z',
+offboarding:'M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9',
+reports:'M18 20V10M12 20V4M6 20v-6',
+notifications:'M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9M13.7 21a2 2 0 0 1-3.4 0',
+settings:'M12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6M12 2v3M12 19v3M2 12h3M19 12h3M4.9 4.9l2.1 2.1M17 17l2.1 2.1M4.9 19.1L7 17M17 7l2.1-2.1'
+};
+const NAV=[['dashboard','Dashboard'],['employees','Employees'],['organization','Organization'],['recruitment','Recruitment'],['onboarding','Onboarding'],['attendance','Attendance'],['leave','Leave'],['payroll','Payroll'],['performance','Performance'],['training','Training'],['benefits','Benefits'],['documents','Documents'],['relations','Employee Relations'],['offboarding','Offboarding'],['reports','Reports'],['notifications','Notifications'],['settings','Settings']];
+
+const DEPTS=['Engineering','Design','Finance','Operations','People','Sales'];
+const DEFAULT_ONB=['Sign employment contract','Set up laptop and accounts','Meet your manager','Complete safety and policy training','30-day check-in'];
+const DEFAULT_OFF=['Hold exit interview','Return laptop and access card','Revoke system access','Confirm final pay and leave payout','Hand over open work'];
+
+function seed(){
+  const E=[
+   [1,'Amara Osei','HR Director','People','Full-time','Active','2019-03-04',96000],
+   [2,'Daniel Reyes','Senior Engineer','Engineering','Full-time','Active','2020-07-13',118000],
+   [3,'Mei Tanaka','Product Designer','Design','Full-time','Active','2021-02-01',88000],
+   [4,"Liam O'Connor",'Finance Manager','Finance','Full-time','Active','2018-10-15',102000],
+   [5,'Priya Nair','Engineering Manager','Engineering','Full-time','Active','2017-05-22',134000],
+   [6,'Sophal Kem','Operations Lead','Operations','Full-time','Active','2022-01-10',78000],
+   [7,'Hannah Berg','Account Executive','Sales','Full-time','Active','2023-04-03',72000],
+   [8,'Omar Farouk','Frontend Engineer','Engineering','Full-time','Probation','2026-07-20',84000],
+   [9,'Lucía Torres','Recruiter','People','Part-time','Active','2024-09-09',48000],
+   [10,'Jonas Weber','Sales Director','Sales','Full-time','Active','2016-11-28',126000],
+   [11,'Nadia Rahman','UX Researcher','Design','Contract','Active','2026-08-17',66000],
+   [12,'Chea Vanna','Payroll Analyst','Finance','Full-time','Active','2025-06-02',64000]
+  ].map(a=>({id:a[0],name:a[1],role:a[2],dept:a[3],type:a[4],status:a[5],start:a[6],salary:a[7],email:a[1].toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g,'').replace(/[^a-z ]/g,'').replace(/ /g,'.')+'@northwind.example'}));
+  return {
+    emps:E,
+    heads:{Engineering:5,Design:3,Finance:4,Operations:6,People:1,Sales:10},
+    leaves:[
+      {id:1,emp:2,type:'Annual',from:'2026-09-21',to:'2026-09-25',status:'Approved'},
+      {id:2,emp:7,type:'Annual',from:'2026-10-05',to:'2026-10-09',status:'Pending'},
+      {id:3,emp:3,type:'Sick',from:'2026-09-22',to:'2026-09-22',status:'Approved'},
+      {id:4,emp:6,type:'Unpaid',from:'2026-10-19',to:'2026-10-21',status:'Pending'},
+      {id:5,emp:12,type:'Annual',from:'2026-11-02',to:'2026-11-06',status:'Pending'},
+      {id:6,emp:9,type:'Parental',from:'2026-08-03',to:'2026-08-14',status:'Approved'}],
+    jobs:[{id:1,title:'Senior Designer',dept:'Design',openings:1},{id:2,title:'Backend Engineer',dept:'Engineering',openings:2},{id:3,title:'Sales Associate',dept:'Sales',openings:1}],
+    stages:['Applied','Screening','Interview','Offer','Hired'],
+    cands:[
+      {id:1,name:'Elise Moreau',role:'Senior Designer',stage:'Interview',source:'Referral'},
+      {id:2,name:'Kwame Mensah',role:'Senior Designer',stage:'Screening',source:'Job board'},
+      {id:3,name:'Yuki Sato',role:'Senior Designer',stage:'Offer',source:'Referral'},
+      {id:4,name:'Ravi Menon',role:'Backend Engineer',stage:'Applied',source:'Careers page'},
+      {id:5,name:'Clara Hughes',role:'Backend Engineer',stage:'Interview',source:'Job board'},
+      {id:6,name:'Tomás Silva',role:'Backend Engineer',stage:'Applied',source:'Careers page'},
+      {id:7,name:'Ana Petrova',role:'Backend Engineer',stage:'Screening',source:'Referral'},
+      {id:8,name:'Ben Okafor',role:'Sales Associate',stage:'Applied',source:'Job board'},
+      {id:9,name:'Mira Costa',role:'Sales Associate',stage:'Hired',source:'Careers page'}],
+    onb:[
+      {id:1,emp:8,tasks:DEFAULT_ONB.map((t,i)=>({t,done:i<3}))},
+      {id:2,emp:11,tasks:DEFAULT_ONB.map((t,i)=>({t,done:i<2}))}],
+    att:{1:['08:48',''],3:['09:05',''],4:['09:02',''],5:['08:30',''],6:['09:31',''],7:['08:55',''],8:['09:10',''],10:['08:41',''],11:['09:20',''],12:['08:58','']},
+    payroll:{period:'September 2026',status:'Draft'},
+    perf:[
+      {emp:2,goal:'Ship the new billing service',progress:70,rating:0},
+      {emp:3,goal:'Redesign the onboarding flow',progress:55,rating:4},
+      {emp:5,goal:'Cut release cycle to one week',progress:80,rating:5},
+      {emp:6,goal:'Consolidate two warehouse vendors',progress:40,rating:3},
+      {emp:7,goal:'Close 12 new accounts',progress:65,rating:0},
+      {emp:10,goal:'Grow regional pipeline by 20%',progress:75,rating:4},
+      {emp:4,goal:'Automate month-end close',progress:50,rating:0},
+      {emp:1,goal:'Launch manager training programme',progress:60,rating:4}],
+    courses:[
+      {id:1,title:'Workplace safety',hours:2,mandatory:true},
+      {id:2,title:'Data protection basics',hours:1.5,mandatory:true},
+      {id:3,title:'Manager essentials',hours:6,mandatory:false},
+      {id:4,title:'Inclusive hiring',hours:3,mandatory:false},
+      {id:5,title:'Advanced spreadsheets',hours:4,mandatory:false}],
+    assign:[
+      {id:1,emp:8,course:1,progress:100},{id:2,emp:8,course:2,progress:40},{id:3,emp:11,course:1,progress:20},
+      {id:4,emp:5,course:3,progress:75},{id:5,emp:9,course:4,progress:100},{id:6,emp:12,course:5,progress:30},{id:7,emp:6,course:1,progress:100}],
+    plans:[
+      {id:1,name:'Health Plus',type:'Medical',provider:'Northstar Health',cost:320},
+      {id:2,name:'Dental Care',type:'Dental',provider:'BrightSmile',cost:45},
+      {id:3,name:'Provident fund',type:'Retirement',provider:'Company scheme',cost:180},
+      {id:4,name:'Wellness stipend',type:'Wellbeing',provider:'Company scheme',cost:50},
+      {id:5,name:'Transport allowance',type:'Allowance',provider:'Company scheme',cost:60}],
+    enrol:[{emp:1,plan:1},{emp:2,plan:1},{emp:2,plan:3},{emp:3,plan:1},{emp:3,plan:2},{emp:4,plan:1},{emp:4,plan:3},{emp:5,plan:1},{emp:5,plan:3},{emp:5,plan:4},{emp:6,plan:5},{emp:7,plan:1},{emp:10,plan:1},{emp:10,plan:3}],
+    docs:[
+      {id:1,name:'Employment contract',emp:8,type:'Contract',updated:'2026-07-18',status:'Pending'},
+      {id:2,name:'Employee handbook 2026',emp:0,type:'Policy',updated:'2026-01-05',status:'Active'},
+      {id:3,name:'Contractor NDA',emp:11,type:'Contract',updated:'2026-08-15',status:'Pending'},
+      {id:4,name:'Tax declaration',emp:7,type:'Tax',updated:'2026-03-02',status:'Signed'},
+      {id:5,name:'Offer letter',emp:0,type:'Offer',updated:'2026-09-20',status:'Pending',cand:'Yuki Sato'},
+      {id:6,name:'Safety certificate',emp:6,type:'Certificate',updated:'2025-09-01',status:'Expired'},
+      {id:7,name:'Performance review template',emp:0,type:'Template',updated:'2026-06-10',status:'Active'}],
+    cases:[
+      {id:1,type:'Workload concern',emp:8,opened:'2026-09-15',status:'Open',sev:'Medium'},
+      {id:2,type:'Schedule conflict',emp:6,opened:'2026-09-02',status:'Resolved',sev:'Low'},
+      {id:3,type:'Conduct complaint',emp:11,opened:'2026-09-19',status:'Investigating',sev:'High'}],
+    off:[{id:1,emp:9,last:'2026-10-16',reason:'Resignation',tasks:DEFAULT_OFF.map((t,i)=>({t,done:i<2}))}],
+    notes:[
+      {id:1,text:'Yuki Sato’s offer letter is waiting for a signature.',time:'2h ago',read:false,go:'documents'},
+      {id:2,text:'3 leave requests need a decision.',time:'5h ago',read:false,go:'leave'},
+      {id:3,text:'A high-priority conduct complaint was opened.',time:'Yesterday',read:false,go:'relations'},
+      {id:4,text:'September payroll is ready to review.',time:'Yesterday',read:true,go:'payroll'},
+      {id:5,text:'Omar Farouk is 3 of 5 tasks into onboarding.',time:'2 days ago',read:true,go:'onboarding'},
+      {id:6,text:'Sophal Kem’s safety certificate has expired.',time:'3 days ago',read:true,go:'documents'}],
+    set:{company:'Northwind Group',workStart:'09:00',grace:15,annualDays:18,deduction:14,theme:'light'}
+  };
+}
+let S;
+try{const raw=localStorage.getItem('peopledesk_v2');S=raw?JSON.parse(raw):seed()}catch(e){S=seed()}
+if(!S||!S.emps)S=seed();
+Object.keys(S.heads).forEach(d=>{if(!DEPTS.includes(d))DEPTS.push(d)});
+function save(){try{localStorage.setItem('peopledesk_v2',JSON.stringify(S))}catch(e){}}
+
+let route='dashboard';
+const ui={q:'',dept:'All',dq:'',dt:'All',lf:'All'};
+
+const emp=id=>S.emps.find(e=>e.id===id)||{id:0,name:'Unknown',role:'',dept:''};
+const onLeave=id=>S.leaves.some(l=>l.emp===id&&l.status==='Approved'&&l.from<=TODAY&&TODAY<=l.to);
+const status=e=>onLeave(e.id)?'On leave':e.status;
+const COLORS=['#1F6F5C','#2A6A8C','#8A5E00','#7A4B8C','#A63A27','#4C6B2F'];
+const av=e=>{const i=e.name.split(' ').map(w=>w[0]).slice(0,2).join('');return `<span class="av" style="background:${COLORS[e.id%COLORS.length]}">${esc(i)}</span>`};
+const who=(e,sub)=>`<div class="who">${av(e)}<div><b>${esc(e.name)}</b><small>${esc(sub==null?e.role:sub)}</small></div></div>`;
+const pill=(t,k)=>`<span class="pill ${k||'mute'}">${esc(t)}</span>`;
+const stKind=s=>({Active:'ok',Probation:'warn','On leave':'info'}[s]||'mute');
+const empty=t=>`<div class="empty">${t}</div>`;
+const prog=p=>`<div class="prog" role="progressbar" aria-valuenow="${p}" aria-valuemin="0" aria-valuemax="100"><i style="width:${p}%"></i></div>`;
+const bars=(items,fmt)=>{const m=Math.max(1,...items.map(i=>i[1]));return items.map(i=>`<div class="hb"><span>${esc(i[0])}</span><div class="tr"><i style="width:${Math.max(3,i[1]/m*100)}%"></i></div><b>${fmt?fmt(i[1]):i[1]}</b></div>`).join('')};
+const opts=(list,sel)=>list.map(o=>`<option${o===sel?' selected':''}>${esc(o)}</option>`).join('');
+const activeEmps=()=>S.emps.filter(e=>!S.off.some(o=>o.emp===e.id&&o.last<TODAY));
+
+function toast(t){const el=$('#toast');el.textContent=t;el.classList.add('show');clearTimeout(toast.t);toast.t=setTimeout(()=>el.classList.remove('show'),2200)}
+function commit(msg){save();render();if(msg)toast(msg)}
+function notify(text,go){S.notes.unshift({id:nid(S.notes),text,time:'Just now',read:false,go})}
+
+function dialog(html){const d=$('#dlg');d.innerHTML=html;if(!d.open)d.showModal()}
+function closeDlg(){const d=$('#dlg');if(d.open)d.close()}
+function modal(title,fields,onOk,okLabel){
+  const body=fields.map(f=>`<label>${esc(f.label)}${f.req?' *':''}${f.type==='select'?`<select id="f_${f.k}">${f.o.map(o=>Array.isArray(o)?`<option value="${esc(o[0])}">${esc(o[1])}</option>`:`<option>${esc(o)}</option>`).join('')}</select>`:`<input id="f_${f.k}" type="${f.type||'text'}" value="${esc(f.v||'')}">`}</label>`).join('');
+  dialog(`<div class="mh"><h3>${esc(title)}</h3><button class="x" data-a="close" aria-label="Close">✕</button></div><div class="mb">${body}</div><div class="mf"><button class="btn ghost" data-a="close">Cancel</button><button class="btn" id="mok">${esc(okLabel||'Save')}</button></div>`);
+  $('#mok').onclick=()=>{const v={};fields.forEach(f=>v[f.k]=$('#f_'+f.k).value.trim());const miss=fields.find(f=>f.req&&!v[f.k]);if(miss){toast(miss.label+' is required');return}closeDlg();onOk(v)};
+}
+const empOpts=list=>(list||S.emps).map(e=>[String(e.id),e.name]);
+
+/* ---------- Views ---------- */
+const V={};
+
+V.dashboard=()=>{
+  const pend=S.leaves.filter(l=>l.status==='Pending');
+  const offers=S.cands.filter(c=>c.stage==='Offer');
+  const hi=S.cases.filter(c=>c.sev==='High'&&c.status!=='Resolved');
+  const q=[];
+  pend.forEach(l=>q.push(`<li><div class="tx"><b>${esc(emp(l.emp).name)}</b> asked for ${wd(l.from,l.to)} days of ${esc(l.type.toLowerCase())} leave<small>${fdate(l.from)} to ${fdate(l.to)}</small></div><div class="acts"><button class="btn sm" data-a="leaveSet" data-id="${l.id}" data-v="Approved">Approve</button><button class="btn sm ghost" data-a="leaveSet" data-id="${l.id}" data-v="Declined">Decline</button></div></li>`));
+  offers.forEach(c=>q.push(`<li><div class="tx"><b>${esc(c.name)}</b> has an offer out<small>${esc(c.role)}</small></div><button class="btn sm ghost" data-a="go" data-v="recruitment">View pipeline</button></li>`));
+  hi.forEach(c=>q.push(`<li><div class="tx"><b>${esc(c.type)}</b> is high priority<small>Raised by ${esc(emp(c.emp).name)}</small></div><button class="btn sm ghost" data-a="go" data-v="relations">Open case</button></li>`));
+  if(S.payroll.status==='Draft')q.push(`<li><div class="tx"><b>${esc(S.payroll.period)} payroll</b> is waiting for approval<small>${activeEmps().length} employees</small></div><button class="btn sm ghost" data-a="go" data-v="payroll">Review</button></li>`);
+  const byDept=DEPTS.map(d=>[d,S.emps.filter(e=>e.dept===d).length]);
+  const openRoles=S.jobs.reduce((s,j)=>s+j.openings,0);
+  return `<div class="strip">
+    <div><b>${S.emps.length}</b><span>Employees</span></div>
+    <div><b>${S.emps.filter(e=>onLeave(e.id)).length}</b><span>On leave today</span></div>
+    <div><b>${openRoles}</b><span>Open roles</span></div>
+    <div><b>${pend.length}</b><span>Leave requests waiting</span></div></div>
+  <div class="grid2">
+    <div class="panel"><h3>Needs your attention</h3>${q.length?`<ul class="queue" style="margin-top:8px">${q.join('')}</ul>`:empty('Nothing is waiting on you. New requests will show up here.')}</div>
+    <div style="display:grid;gap:18px">
+      <div class="panel"><h3>Headcount by department</h3><div class="pb">${bars(byDept)}</div></div>
+      <div class="panel"><h3>Coming up</h3><ul class="queue" style="margin-top:6px">
+        <li><div class="tx"><b>Payroll cut-off</b><small>${fdate('2026-09-28')}</small></div></li>
+        <li><div class="tx"><b>Performance reviews due</b><small>${fdate('2026-10-15')}</small></div></li>
+        ${S.off.map(o=>`<li><div class="tx"><b>${esc(emp(o.emp).name)} leaves</b><small>${fdate(o.last)}</small></div></li>`).join('')}
+      </ul></div>
+    </div></div>`;
+};
+
+function empRows(){
+  const q=ui.q.toLowerCase();
+  const rows=S.emps.filter(e=>(ui.dept==='All'||e.dept===ui.dept)&&(!q||(e.name+' '+e.role+' '+e.email).toLowerCase().includes(q)));
+  if(!rows.length)return empty('No employees match. Clear the search or add a new employee.');
+  return `<div class="tw"><table><thead><tr><th>Employee</th><th>Department</th><th>Type</th><th>Status</th><th>Start date</th></tr></thead><tbody>${rows.map(e=>`<tr class="click" data-a="empView" data-id="${e.id}"><td>${who(e)}</td><td>${esc(e.dept)}</td><td>${esc(e.type)}</td><td>${pill(status(e),stKind(status(e)))}</td><td>${fdate(e.start)}</td></tr>`).join('')}</tbody></table></div>`;
+}
+V.employees=()=>`<div class="bar-tools"><input type="search" placeholder="Search by name, role or email" value="${esc(ui.q)}" data-in="q" aria-label="Search employees" style="min-width:260px"><select data-in="dept" aria-label="Department">${opts(['All',...DEPTS],ui.dept)}</select><span class="grow"></span><button class="btn" data-a="empAdd">Add employee</button></div><div class="panel" id="tbl">${empRows()}</div>`;
+
+V.organization=()=>`<p class="lead">Departments, who leads them and who works in each.</p><div class="bar-tools"><span class="grow"></span><button class="btn" data-a="deptAdd">Add department</button></div><div class="grid3">${Object.keys(S.heads).map(d=>{const m=S.emps.filter(e=>e.dept===d);const h=emp(S.heads[d]);return `<div class="panel"><div class="pb"><h3>${esc(d)}</h3><p style="color:var(--muted);margin:2px 0 12px">${m.length} ${m.length===1?'person':'people'}</p>${who(h,'Department head')}<div style="margin-top:14px;display:flex;flex-wrap:wrap;gap:6px">${m.filter(e=>e.id!==h.id).map(e=>pill(e.name)).join('')||'<span style="color:var(--muted)">No other members yet.</span>'}</div></div></div>`}).join('')}</div>`;
+
+V.recruitment=()=>`<div class="bar-tools"><span class="grow"></span><button class="btn ghost" data-a="jobAdd">Open a role</button><button class="btn" data-a="candAdd">Add candidate</button></div>
+<div class="strip">${S.jobs.map(j=>`<div><b>${j.openings}</b><span>${esc(j.title)} · ${esc(j.dept)}</span></div>`).join('')||'<div><span>No open roles. Open one to start hiring.</span></div>'}</div>
+<div class="kan">${S.stages.map((st,si)=>{const c=S.cands.filter(x=>x.stage===st);return `<div class="col"><h3>${st}<span>${c.length}</span></h3>${c.map(x=>`<div class="card"><b>${esc(x.name)}</b><small>${esc(x.role)} · ${esc(x.source)}</small><div class="mv"><button class="btn sm ghost" data-a="candMove" data-id="${x.id}" data-v="-1"${si===0?' disabled':''} aria-label="Move back">←</button><button class="btn sm ghost" data-a="candMove" data-id="${x.id}" data-v="1"${si===S.stages.length-1?' disabled':''} aria-label="Move forward">→</button></div></div>`).join('')||'<small style="color:var(--muted);padding:4px">No candidates here.</small>'}</div>`}).join('')}</div>`;
+
+V.onboarding=()=>`<p class="lead">Track each new hire's first weeks. Tick tasks off as they are completed.</p><div class="bar-tools"><span class="grow"></span><button class="btn" data-a="onbAdd">Start onboarding</button></div>${S.onb.length?`<div class="grid3">${S.onb.map(o=>{const e=emp(o.emp);const d=o.tasks.filter(t=>t.done).length;const p=Math.round(d/o.tasks.length*100);return `<div class="panel"><div class="pb">${who(e,e.role+' · starts '+fdate(e.start))}<div style="display:flex;gap:10px;align-items:center;margin:14px 0 6px">${prog(p)}<b>${p}%</b></div>${o.tasks.map((t,i)=>`<label class="chk${t.done?' done':''}"><input type="checkbox" data-c="onbTick" data-id="${o.id}" data-i="${i}"${t.done?' checked':''}><span>${esc(t.t)}</span></label>`).join('')}</div></div>`}).join('')}</div>`:empty('No one is onboarding. Start onboarding when a new hire is added.')}`;
+
+V.attendance=()=>{
+  const list=S.emps.filter(e=>!onLeave(e.id));
+  const lim=tomin(S.set.workStart)+ +S.set.grace;
+  const rec=e=>S.att[e.id];
+  const present=list.filter(e=>rec(e)).length;
+  const late=list.filter(e=>rec(e)&&tomin(rec(e)[0])>lim).length;
+  const away=S.emps.length-list.length;
+  return `<div class="strip"><div><b>${present}</b><span>Clocked in</span></div><div><b>${late}</b><span>Late (after ${esc(S.set.workStart)} + ${S.set.grace} min)</span></div><div><b>${list.length-present}</b><span>Not in yet</span></div><div><b>${away}</b><span>On leave</span></div></div>
+  <div class="panel"><div class="tw"><table><thead><tr><th>Employee</th><th>Status</th><th>In</th><th>Out</th><th>Hours</th><th class="r">Action</th></tr></thead><tbody>${S.emps.map(e=>{
+    if(onLeave(e.id))return `<tr><td>${who(e)}</td><td>${pill('On leave','info')}</td><td>–</td><td>–</td><td>–</td><td></td></tr>`;
+    const r=rec(e);let st=pill('Not in yet','mute'),h='–';
+    if(r){st=tomin(r[0])>lim?pill('Late','warn'):pill('On time','ok');if(r[1])h=((tomin(r[1])-tomin(r[0]))/60).toFixed(1)}
+    return `<tr><td>${who(e)}</td><td>${st}</td><td>${r?esc(r[0]):'–'}</td><td>${r&&r[1]?esc(r[1]):'–'}</td><td>${h}</td><td class="r">${!r?`<button class="btn sm" data-a="clockIn" data-id="${e.id}">Clock in</button>`:!r[1]?`<button class="btn sm ghost" data-a="clockOut" data-id="${e.id}">Clock out</button>`:''}</td></tr>`}).join('')}</tbody></table></div></div>`;
+};
+
+V.leave=()=>{
+  const list=S.leaves.filter(l=>ui.lf==='All'||l.status===ui.lf).sort((a,b)=>b.from.localeCompare(a.from));
+  const k={Pending:'warn',Approved:'ok',Declined:'bad'};
+  return `<div class="bar-tools"><select data-in="lf" aria-label="Filter by status">${opts(['All','Pending','Approved','Declined'],ui.lf)}</select><span class="grow"></span><span style="color:var(--muted)">Annual allowance: ${S.set.annualDays} days</span><button class="btn" data-a="leaveAdd">Add leave request</button></div>
+  <div class="panel">${list.length?`<div class="tw"><table><thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th>Working days</th><th>Status</th><th class="r">Decision</th></tr></thead><tbody>${list.map(l=>`<tr><td>${who(emp(l.emp))}</td><td>${esc(l.type)}</td><td>${fdate(l.from)} to ${fdate(l.to)}</td><td>${wd(l.from,l.to)}</td><td>${pill(l.status,k[l.status])}</td><td class="r">${l.status==='Pending'?`<div class="acts" style="justify-content:flex-end"><button class="btn sm" data-a="leaveSet" data-id="${l.id}" data-v="Approved">Approve</button><button class="btn sm ghost" data-a="leaveSet" data-id="${l.id}" data-v="Declined">Decline</button></div>`:''}</td></tr>`).join('')}</tbody></table></div>`:empty('No leave requests with this status.')}</div>`;
+};
+
+const gross=e=>e.salary/12;
+V.payroll=()=>{
+  const list=activeEmps();const r=S.set.deduction/100;
+  const g=list.reduce((s,e)=>s+gross(e),0);
+  const st=['Draft','Approved','Paid'];const i=st.indexOf(S.payroll.status);
+  return `<div class="hdr"><h2 style="font-size:18px">${esc(S.payroll.period)}</h2>${i<2?`<button class="btn" data-a="payNext">${i===0?'Approve payroll':'Mark as paid'}</button>`:pill('Paid','ok')}</div>
+  <div class="steps">${st.map((s,j)=>`<span class="${j<=i?'on':''}">${s}</span>`).join('')}</div>
+  <div class="strip"><div><b>${money(g)}</b><span>Gross pay</span></div><div><b>${money(g*r)}</b><span>Deductions (${S.set.deduction}%)</span></div><div><b>${money(g*(1-r))}</b><span>Net pay</span></div></div>
+  <div class="panel"><div class="tw"><table><thead><tr><th>Employee</th><th>Department</th><th class="r">Gross</th><th class="r">Deductions</th><th class="r">Net</th></tr></thead><tbody>${list.map(e=>`<tr><td>${who(e)}</td><td>${esc(e.dept)}</td><td class="r">${money(gross(e))}</td><td class="r">${money(gross(e)*r)}</td><td class="r"><b>${money(gross(e)*(1-r))}</b></td></tr>`).join('')}</tbody></table></div></div>`;
+};
+
+V.performance=()=>{
+  const rated=S.perf.filter(p=>p.rating>0);const avg=rated.length?(rated.reduce((s,p)=>s+p.rating,0)/rated.length).toFixed(1):'–';
+  return `<div class="strip"><div><b>${S.perf.length}</b><span>Reviews this cycle (H2 2026)</span></div><div><b>${rated.length}</b><span>Rated</span></div><div><b>${avg}</b><span>Average rating out of 5</span></div></div>
+  <div class="bar-tools"><span class="grow"></span><button class="btn" data-a="goalAdd">Add goal</button></div>
+  <div class="panel"><div class="tw"><table><thead><tr><th>Employee</th><th>Goal</th><th>Progress</th><th>Rating</th><th>Status</th></tr></thead><tbody>${S.perf.map((p,i)=>`<tr><td>${who(emp(p.emp))}</td><td>${esc(p.goal)}</td><td><div style="display:flex;gap:8px;align-items:center">${prog(p.progress)}<span>${p.progress}%</span></div></td><td><select data-c="rate" data-id="${i}" aria-label="Rating for ${esc(emp(p.emp).name)}">${['Not rated',1,2,3,4,5].map((o,j)=>`<option value="${j}"${j===p.rating?' selected':''}>${o}</option>`).join('')}</select></td><td>${p.rating?pill('Reviewed','ok'):pill('In progress','warn')}</td></tr>`).join('')}</tbody></table></div></div>`;
+};
+
+V.training=()=>`<div class="bar-tools"><span class="grow"></span><button class="btn ghost" data-a="courseAdd">Add course</button><button class="btn" data-a="assignAdd">Assign course</button></div>
+<div class="grid3" style="margin-bottom:18px">${S.courses.map(c=>{const a=S.assign.filter(x=>x.course===c.id);const d=a.filter(x=>x.progress===100).length;return `<div class="panel"><div class="pb"><div style="display:flex;justify-content:space-between;gap:8px"><h3 style="font-size:16px">${esc(c.title)}</h3>${c.mandatory?pill('Required','warn'):''}</div><p style="color:var(--muted);margin:4px 0 12px">${c.hours} hours · ${a.length} assigned · ${d} finished</p>${prog(a.length?Math.round(d/a.length*100):0)}</div></div>`}).join('')}</div>
+<div class="panel"><h3>Assignments</h3>${S.assign.length?`<div class="tw"><table style="margin-top:8px"><thead><tr><th>Employee</th><th>Course</th><th>Progress</th></tr></thead><tbody>${S.assign.map(a=>`<tr><td>${who(emp(a.emp))}</td><td>${esc((S.courses.find(c=>c.id===a.course)||{}).title)}</td><td><div style="display:flex;gap:10px;align-items:center"><input type="range" min="0" max="100" step="10" value="${a.progress}" data-c="prog" data-id="${a.id}" aria-label="Progress"><span>${a.progress}%</span></div></td></tr>`).join('')}</tbody></table></div>`:empty('Nothing assigned yet. Assign a course to an employee.')}</div>`;
+
+V.benefits=()=>{const total=S.enrol.reduce((s,x)=>s+((S.plans.find(p=>p.id===x.plan)||{}).cost||0),0);
+  return `<div class="strip"><div><b>${S.plans.length}</b><span>Plans offered</span></div><div><b>${S.enrol.length}</b><span>Enrolments</span></div><div><b>${money(total)}</b><span>Employer cost per month</span></div></div>
+  <div class="bar-tools"><span class="grow"></span><button class="btn" data-a="enrolAdd">Enrol employee</button></div>
+  <div class="grid3">${S.plans.map(p=>{const m=S.enrol.filter(x=>x.plan===p.id);return `<div class="panel"><div class="pb"><div style="display:flex;justify-content:space-between;gap:8px"><h3 style="font-size:16px">${esc(p.name)}</h3>${pill(p.type,'info')}</div><p style="color:var(--muted);margin:4px 0 10px">${esc(p.provider)} · ${money(p.cost)} per person each month</p><b>${m.length} enrolled</b><div style="margin-top:8px;display:flex;flex-wrap:wrap;gap:6px">${m.map(x=>`<span class="pill mute">${esc(emp(x.emp).name)} <a href="#" data-a="unenrol" data-id="${x.emp}" data-v="${p.id}" style="color:var(--muted);text-decoration:none" aria-label="Remove">✕</a></span>`).join('')}</div></div></div>`}).join('')}</div>`;};
+
+function docRows(){
+  const q=ui.dq.toLowerCase();
+  const rows=S.docs.filter(d=>(ui.dt==='All'||d.type===ui.dt)&&(!q||(d.name+' '+(d.cand||emp(d.emp).name)).toLowerCase().includes(q)));
+  if(!rows.length)return empty('No documents match. Clear the filters or add a document.');
+  const k={Signed:'ok',Active:'ok',Pending:'warn',Expired:'bad'};
+  return `<div class="tw"><table><thead><tr><th>Document</th><th>Type</th><th>Belongs to</th><th>Updated</th><th>Status</th><th class="r">Action</th></tr></thead><tbody>${rows.map(d=>`<tr><td><b>${esc(d.name)}</b></td><td>${esc(d.type)}</td><td>${esc(d.cand||(d.emp?emp(d.emp).name:'Everyone'))}</td><td>${fdate(d.updated)}</td><td>${pill(d.status,k[d.status])}</td><td class="r">${d.status==='Pending'?`<button class="btn sm" data-a="docSign" data-id="${d.id}">Mark signed</button>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+}
+V.documents=()=>`<div class="bar-tools"><input type="search" placeholder="Search documents" value="${esc(ui.dq)}" data-in="dq" aria-label="Search documents" style="min-width:240px"><select data-in="dt" aria-label="Type">${opts(['All','Contract','Policy','Tax','Offer','Certificate','Template'],ui.dt)}</select><span class="grow"></span><button class="btn" data-a="docAdd">Add document</button></div><div class="panel" id="tbl">${docRows()}</div>`;
+
+V.relations=()=>{const k={High:'bad',Medium:'warn',Low:'mute'};const open=S.cases.filter(c=>c.status!=='Resolved').length;
+  return `<div class="strip"><div><b>${open}</b><span>Open cases</span></div><div><b>${S.cases.filter(c=>c.sev==='High'&&c.status!=='Resolved').length}</b><span>High priority</span></div><div><b>${S.cases.filter(c=>c.status==='Resolved').length}</b><span>Resolved</span></div></div>
+  <div class="bar-tools"><span class="grow"></span><button class="btn" data-a="caseAdd">Open a case</button></div>
+  <div class="panel">${S.cases.length?`<div class="tw"><table><thead><tr><th>Case</th><th>Raised by</th><th>Opened</th><th>Priority</th><th>Status</th></tr></thead><tbody>${S.cases.map(c=>`<tr><td><b>${esc(c.type)}</b></td><td>${who(emp(c.emp))}</td><td>${fdate(c.opened)}</td><td>${pill(c.sev,k[c.sev])}</td><td><select data-c="caseSt" data-id="${c.id}" aria-label="Status">${opts(['Open','Investigating','Resolved'],c.status)}</select></td></tr>`).join('')}</tbody></table></div>`:empty('No cases. Open a case when an employee raises a concern.')}</div>`;};
+
+V.offboarding=()=>`<p class="lead">Make sure nothing is missed when someone leaves: access, equipment, final pay and handover.</p><div class="bar-tools"><span class="grow"></span><button class="btn" data-a="offAdd">Start offboarding</button></div>${S.off.length?`<div class="grid3">${S.off.map(o=>{const e=emp(o.emp);const d=o.tasks.filter(t=>t.done).length;const p=Math.round(d/o.tasks.length*100);return `<div class="panel"><div class="pb">${who(e,e.role)}<p style="color:var(--muted);margin:10px 0 0">${esc(o.reason)} · last day ${fdate(o.last)}</p><div style="display:flex;gap:10px;align-items:center;margin:10px 0 6px">${prog(p)}<b>${p}%</b></div>${o.tasks.map((t,i)=>`<label class="chk${t.done?' done':''}"><input type="checkbox" data-c="offTick" data-id="${o.id}" data-i="${i}"${t.done?' checked':''}><span>${esc(t.t)}</span></label>`).join('')}</div></div>`}).join('')}</div>`:empty('No one is leaving. Start offboarding when an employee gives notice.')}`;
+
+V.reports=()=>{
+  const list=S.emps;
+  const ten=list.reduce((s,e)=>s+(new Date(TODAY)-new Date(e.start))/(365.25*864e5),0)/list.length;
+  const rated=S.perf.filter(p=>p.rating);const avg=rated.length?(rated.reduce((s,p)=>s+p.rating,0)/rated.length).toFixed(1):'–';
+  const types=['Annual','Sick','Parental','Unpaid'];
+  const lv=types.map(t=>[t,S.leaves.filter(l=>l.type===t&&l.status!=='Declined').reduce((s,l)=>s+wd(l.from,l.to),0)]);
+  const pay=DEPTS.map(d=>[d,S.emps.filter(e=>e.dept===d).reduce((s,e)=>s+gross(e),0)]);
+  const src={};S.cands.forEach(c=>src[c.source]=(src[c.source]||0)+1);
+  return `<div class="strip"><div><b>${list.length}</b><span>Headcount</span></div><div><b>${ten.toFixed(1)}</b><span>Average years of service</span></div><div><b>${avg}</b><span>Average rating</span></div><div><b>${S.cands.filter(c=>c.stage!=='Hired').length}</b><span>Active candidates</span></div></div>
+  <div class="grid3" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+   <div class="panel"><h3>Headcount by department</h3><div class="pb">${bars(DEPTS.map(d=>[d,list.filter(e=>e.dept===d).length]))}</div></div>
+   <div class="panel"><h3>Leave days by type</h3><div class="pb">${bars(lv)}</div></div>
+   <div class="panel"><h3>Monthly gross pay by department</h3><div class="pb">${bars(pay,money)}</div></div>
+   <div class="panel"><h3>Where candidates come from</h3><div class="pb">${bars(Object.entries(src))}</div></div>
+  </div>`;
+};
+
+V.notifications=()=>`<div class="bar-tools"><span class="grow"></span><button class="btn ghost" data-a="readAll">Mark all as read</button></div><div class="panel">${S.notes.length?`<ul class="queue">${S.notes.map(n=>`<li><span style="width:9px;height:9px;border-radius:50%;flex:none;background:${n.read?'transparent':'var(--accent)'};border:1px solid ${n.read?'var(--line)':'var(--accent)'}"></span><div class="tx" style="${n.read?'color:var(--muted)':''}"><b style="font-weight:${n.read?400:600}">${esc(n.text)}</b><small>${esc(n.time)}</small></div><div class="acts"><button class="btn sm ghost" data-a="go" data-v="${n.go}">Open</button><button class="btn sm ghost" data-a="noteTog" data-id="${n.id}">${n.read?'Mark unread':'Mark read'}</button></div></li>`).join('')}</ul>`:empty('You are all caught up.')}</div>`;
+
+V.settings=()=>{const s=S.set;const row=(l,d,inp)=>`<div class="set"><div><b>${l}</b><small>${d}</small></div>${inp}</div>`;
+  return `<div class="panel"><div class="pb">
+  ${row('Company name','Shown in the sidebar.',`<input data-c="set" data-k="company" value="${esc(s.company)}">`)}
+  ${row('Work day starts','Used to decide who is late.',`<input type="time" data-c="set" data-k="workStart" value="${esc(s.workStart)}">`)}
+  ${row('Grace period (minutes)','Clock-ins within this window count as on time.',`<input type="number" min="0" max="120" data-c="set" data-k="grace" value="${s.grace}">`)}
+  ${row('Annual leave (days)','Yearly allowance for each employee.',`<input type="number" min="0" max="60" data-c="set" data-k="annualDays" value="${s.annualDays}">`)}
+  ${row('Payroll deductions (%)','Combined tax and social contributions applied to gross pay.',`<input type="number" min="0" max="60" data-c="set" data-k="deduction" value="${s.deduction}">`)}
+  ${row('Appearance','Follow your device or pick a theme.',`<select data-c="set" data-k="theme">${['system','light','dark'].map(o=>`<option value="${o}"${s.theme===o?' selected':''}>${o[0].toUpperCase()+o.slice(1)}</option>`).join('')}</select>`)}
+  ${row('Sample data','Restore the starting employees and requests. This removes your changes.',`<button class="btn bad" data-a="reset">Reset sample data</button>`)}
+  </div></div>`;};
+
+/* ---------- Actions ---------- */
+const A={
+ go(id,v){route=v;closeMenu();render();window.scrollTo(0,0)},
+ menu(){$('#side').classList.toggle('open');$('#scrim').classList.toggle('open')},
+ close(){closeDlg()},
+ empView(id){const e=emp(id);dialog(`<div class="mh"><h3>${esc(e.name)}</h3><button class="x" data-a="close" aria-label="Close">✕</button></div><div class="mb"><dl class="kv"><dt>Role</dt><dd>${esc(e.role)}</dd><dt>Department</dt><dd>${esc(e.dept)}</dd><dt>Type</dt><dd>${esc(e.type)}</dd><dt>Status</dt><dd>${esc(status(e))}</dd><dt>Email</dt><dd>${esc(e.email)}</dd><dt>Start date</dt><dd>${fdate(e.start)}</dd><dt>Annual salary</dt><dd>${money(e.salary)}</dd></dl></div><div class="mf"><button class="btn bad" data-a="empOff" data-id="${e.id}">Start offboarding</button><button class="btn ghost" data-a="close">Close</button></div>`)},
+ empOff(id){closeDlg();offForm(id)},
+ empAdd(){modal('Add employee',[{k:'name',label:'Full name',req:1},{k:'role',label:'Job title',req:1},{k:'dept',label:'Department',type:'select',o:DEPTS},{k:'type',label:'Employment type',type:'select',o:['Full-time','Part-time','Contract']},{k:'salary',label:'Annual salary (USD)',type:'number',v:'60000',req:1},{k:'start',label:'Start date',type:'date',v:TODAY}],v=>{
+   const id=nid(S.emps);S.emps.push({id,name:v.name,role:v.role,dept:v.dept,type:v.type,status:'Probation',start:v.start,salary:+v.salary||0,email:v.name.toLowerCase().replace(/[^a-z ]/g,'').replace(/ /g,'.')+'@northwind.example'});
+   S.onb.push({id:nid(S.onb),emp:id,tasks:DEFAULT_ONB.map(t=>({t,done:false}))});notify(v.name+' was added and onboarding has started.','onboarding');commit(v.name+' added')})},
+ deptAdd(){modal('Add department',[{k:'name',label:'Department name',req:1},{k:'head',label:'Department head',type:'select',o:empOpts()}],v=>{if(S.heads[v.name]){toast('That department already exists');return}S.heads[v.name]=+v.head;if(!DEPTS.includes(v.name))DEPTS.push(v.name);const e=emp(+v.head);e.dept=v.name;commit('Department added')})},
+ jobAdd(){modal('Open a role',[{k:'title',label:'Job title',req:1},{k:'dept',label:'Department',type:'select',o:DEPTS},{k:'n',label:'Openings',type:'number',v:'1'}],v=>{S.jobs.push({id:nid(S.jobs),title:v.title,dept:v.dept,openings:+v.n||1});commit('Role opened')})},
+ candAdd(){if(!S.jobs.length){toast('Open a role first');return}modal('Add candidate',[{k:'name',label:'Candidate name',req:1},{k:'role',label:'Role',type:'select',o:S.jobs.map(j=>j.title)},{k:'source',label:'Source',type:'select',o:['Careers page','Job board','Referral','Agency']}],v=>{S.cands.push({id:nid(S.cands),name:v.name,role:v.role,stage:'Applied',source:v.source});commit('Candidate added')})},
+ candMove(id,v){const c=S.cands.find(x=>x.id===id);const i=S.stages.indexOf(c.stage)+ +v;if(i<0||i>=S.stages.length)return;c.stage=S.stages[i];if(c.stage==='Offer')notify('An offer is ready for '+c.name+'.','recruitment');commit(c.name+' moved to '+c.stage)},
+ onbAdd(){const free=S.emps.filter(e=>!S.onb.some(o=>o.emp===e.id));if(!free.length){toast('Everyone already has an onboarding checklist');return}modal('Start onboarding',[{k:'emp',label:'Employee',type:'select',o:empOpts(free)}],v=>{S.onb.push({id:nid(S.onb),emp:+v.emp,tasks:DEFAULT_ONB.map(t=>({t,done:false}))});commit('Onboarding started')})},
+ clockIn(id){S.att[id]=[nowHM(),''];commit(emp(id).name+' clocked in')},
+ clockOut(id){S.att[id][1]=nowHM();commit(emp(id).name+' clocked out')},
+ leaveAdd(){modal('Add leave request',[{k:'emp',label:'Employee',type:'select',o:empOpts()},{k:'type',label:'Leave type',type:'select',o:['Annual','Sick','Parental','Unpaid']},{k:'from',label:'From',type:'date',v:TODAY,req:1},{k:'to',label:'To',type:'date',v:TODAY,req:1}],v=>{if(v.to<v.from){toast('End date must be on or after the start date');return}S.leaves.push({id:nid(S.leaves),emp:+v.emp,type:v.type,from:v.from,to:v.to,status:'Pending'});commit('Request added')})},
+ leaveSet(id,v){const l=S.leaves.find(x=>x.id===id);l.status=v;commit('Leave '+v.toLowerCase())},
+ payNext(){S.payroll.status=S.payroll.status==='Draft'?'Approved':'Paid';commit('Payroll '+S.payroll.status.toLowerCase())},
+ goalAdd(){modal('Add goal',[{k:'emp',label:'Employee',type:'select',o:empOpts()},{k:'goal',label:'Goal',req:1}],v=>{S.perf.push({emp:+v.emp,goal:v.goal,progress:0,rating:0});commit('Goal added')})},
+ courseAdd(){modal('Add course',[{k:'title',label:'Course title',req:1},{k:'hours',label:'Hours',type:'number',v:'2'},{k:'req',label:'Required for everyone?',type:'select',o:['No','Yes']}],v=>{S.courses.push({id:nid(S.courses),title:v.title,hours:+v.hours||1,mandatory:v.req==='Yes'});commit('Course added')})},
+ assignAdd(){modal('Assign course',[{k:'emp',label:'Employee',type:'select',o:empOpts()},{k:'course',label:'Course',type:'select',o:S.courses.map(c=>[String(c.id),c.title])}],v=>{S.assign.push({id:nid(S.assign),emp:+v.emp,course:+v.course,progress:0});commit('Course assigned')})},
+ enrolAdd(){modal('Enrol employee',[{k:'emp',label:'Employee',type:'select',o:empOpts()},{k:'plan',label:'Plan',type:'select',o:S.plans.map(p=>[String(p.id),p.name])}],v=>{if(S.enrol.some(x=>x.emp===+v.emp&&x.plan===+v.plan)){toast('Already enrolled in this plan');return}S.enrol.push({emp:+v.emp,plan:+v.plan});commit('Enrolled')})},
+ unenrol(id,v,el){event.preventDefault();S.enrol=S.enrol.filter(x=>!(x.emp===id&&x.plan===+v));commit('Enrolment removed')},
+ docAdd(){modal('Add document',[{k:'name',label:'Document name',req:1},{k:'type',label:'Type',type:'select',o:['Contract','Policy','Tax','Offer','Certificate','Template']},{k:'emp',label:'Belongs to',type:'select',o:[['0','Everyone'],...empOpts()]},{k:'status',label:'Status',type:'select',o:['Pending','Signed','Active']}],v=>{S.docs.push({id:nid(S.docs),name:v.name,type:v.type,emp:+v.emp,updated:TODAY,status:v.status});commit('Document added')})},
+ docSign(id){const d=S.docs.find(x=>x.id===id);d.status='Signed';d.updated=TODAY;commit('Marked as signed')},
+ caseAdd(){modal('Open a case',[{k:'type',label:'What is it about?',req:1},{k:'emp',label:'Raised by',type:'select',o:empOpts()},{k:'sev',label:'Priority',type:'select',o:['Low','Medium','High']}],v=>{S.cases.push({id:nid(S.cases),type:v.type,emp:+v.emp,opened:TODAY,status:'Open',sev:v.sev});if(v.sev==='High')notify('A high-priority case was opened: '+v.type+'.','relations');commit('Case opened')})},
+ offAdd(){offForm()},
+ readAll(){S.notes.forEach(n=>n.read=true);commit('All caught up')},
+ noteTog(id){const n=S.notes.find(x=>x.id===id);n.read=!n.read;commit()},
+ reset(){if(confirm('Reset all data to the sample set?')){S=seed();commit('Sample data restored')}},
+ // change handlers
+ onbTick(id,v,el){const o=S.onb.find(x=>x.id===id);o.tasks[+el.dataset.i].done=el.checked;commit()},
+ offTick(id,v,el){const o=S.off.find(x=>x.id===id);o.tasks[+el.dataset.i].done=el.checked;commit()},
+ rate(i,v){S.perf[i].rating=+v;commit('Rating saved')},
+ prog(id,v){S.assign.find(x=>x.id===id).progress=+v;commit()},
+ caseSt(id,v){S.cases.find(x=>x.id===id).status=v;commit('Case marked '+v.toLowerCase())},
+ set(id,v,el){const k=el.dataset.k;S.set[k]=el.type==='number'?+v:v;applyTheme();commit('Settings saved')}
+};
+function offForm(pre){
+  const free=S.emps.filter(e=>!S.off.some(o=>o.emp===e.id));
+  if(!free.length){toast('Everyone is already being offboarded');return}
+  modal('Start offboarding',[{k:'emp',label:'Employee',type:'select',o:empOpts(free)},{k:'last',label:'Last working day',type:'date',v:'2026-10-30',req:1},{k:'reason',label:'Reason',type:'select',o:['Resignation','End of contract','Retirement','Dismissal']}],v=>{
+    S.off.push({id:nid(S.off),emp:+v.emp,last:v.last,reason:v.reason,tasks:DEFAULT_OFF.map(t=>({t,done:false}))});notify(emp(+v.emp).name+' is leaving on '+fdate(v.last)+'.','offboarding');commit('Offboarding started')});
+  if(pre)$('#f_emp').value=String(pre);
+}
+
+/* ---------- Events ---------- */
+document.addEventListener('click',e=>{const el=e.target.closest('[data-a]');if(!el||el.disabled)return;const f=A[el.dataset.a];if(f)f(+el.dataset.id,el.dataset.v,el)});
+document.addEventListener('change',e=>{const el=e.target.closest('[data-c]');if(el&&A[el.dataset.c])A[el.dataset.c](+el.dataset.id,el.value,el);
+  const s=e.target.closest('[data-in]');if(s&&s.tagName==='SELECT'){ui[s.dataset.in]=s.value;render()}});
+document.addEventListener('input',e=>{const s=e.target.closest('[data-in]');if(!s||s.tagName==='SELECT')return;ui[s.dataset.in]=s.value;const t=$('#tbl');if(t)t.innerHTML=route==='employees'?empRows():docRows()});
+$('#dlg').addEventListener('click',e=>{if(e.target.id==='dlg')closeDlg()});
+function closeMenu(){$('#side').classList.remove('open');$('#scrim').classList.remove('open')}
+function applyTheme(){const t=S.set.theme;if(t==='system')document.documentElement.removeAttribute('data-theme');else document.documentElement.setAttribute('data-theme',t)}
+
+function render(){
+  const unread=S.notes.filter(n=>!n.read).length;
+  const badge={leave:S.leaves.filter(l=>l.status==='Pending').length,notifications:unread,relations:S.cases.filter(c=>c.status!=='Resolved').length};
+  $('#nav').innerHTML=NAV.map(([id,l])=>`<button data-a="go" data-v="${id}"${id===route?' aria-current="page"':''}><svg viewBox="0 0 24 24" aria-hidden="true"><path d="${ICONS[id]}"/></svg>${l}${badge[id]?`<span class="badge">${badge[id]}</span>`:''}</button>`).join('');
+  $('#title').textContent=NAV.find(n=>n[0]===route)[1];
+  $('#co').textContent=S.set.company;
+  $('#today').textContent=new Date(TODAY+'T00:00:00Z').toLocaleDateString('en-GB',{weekday:'long',day:'numeric',month:'long',year:'numeric',timeZone:'UTC'});
+  $('#main').innerHTML=V[route]();
+}
+applyTheme();render();
+</script>
+</body>
+</html>
