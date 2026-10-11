@@ -102,6 +102,28 @@ export default function Employees() {
         >
           Start offboarding
         </button>
+        <button
+          className="btn bad"
+          onClick={() => {
+            if (confirm(`Delete ${e.name}?`)) {
+              close();
+              update((d) => {
+                d.emps = d.emps.filter((x) => x.id !== e.id);
+                d.onb = d.onb.filter((o) => o.emp !== e.id);
+                d.off = d.off.filter((o) => o.emp !== e.id);
+                d.leaves = d.leaves.filter((l) => l.emp !== e.id);
+                d.att = Object.fromEntries(Object.entries(d.att).filter(([eid]) => +eid !== e.id));
+                d.perf = d.perf.filter((p) => p.emp !== e.id);
+                d.assign = d.assign.filter((a) => a.emp !== e.id);
+                d.enrol = d.enrol.filter((en) => en.emp !== e.id);
+                d.cases = d.cases.filter((c) => c.emp !== e.id);
+                d.docs = d.docs.filter((doc) => doc.emp !== e.id);
+              }, `${e.name} deleted`);
+            }
+          }}
+        >
+          Delete
+        </button>
         <button className="btn ghost" onClick={close}>
           Close
         </button>
