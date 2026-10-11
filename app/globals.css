@@ -222,10 +222,33 @@ nav button[aria-current="page"] .badge {
 .top h1 {
   font-size: 22px;
 }
+.top .topright {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
 .top .date {
   color: var(--muted);
-  margin-left: auto;
   font-size: 14px;
+}
+.dbpill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  border: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+.dbpill .dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: 0 0 auto;
+}
+.dbpill.ok .dot {
+  box-shadow: 0 0 0 3px color-mix(in srgb, currentColor 22%, transparent);
 }
 .menu {
   display: none;

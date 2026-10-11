@@ -9,7 +9,7 @@ import {
 } from "react";
 import type { MouseEvent, ReactNode } from "react";
 import { DEPTS, STORE_KEY } from "../../lib/constants";
-import { databaseLoad, persistKeys } from "../../lib/db";
+import { databaseLoad, persistKeys, pingDatabase } from "../../lib/db";
 import { buildSeed } from "../../lib/seed";
 import { isSupabaseConfigured } from "../../lib/supabase";
 import type { Data } from "../../lib/types";
@@ -51,9 +51,13 @@ export type FormDef = {
 };
 export type ModalDef = { head: ReactNode; body: ReactNode; foot?: ReactNode };
 
+export type DbStatus = "connecting" | "connected" | "local" | "error";
+
 type AppCtx = {
   S: Data | null;
   linked: boolean;
+  dbStatus: DbStatus;
+  checkDb: () => void;
   update: (fn: (d: Data) => void, msg?: string) => void;
   toast: (m: string) => void;
   notify: (text: string, go: string) => void;
@@ -70,6 +74,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const [toastMsg, setToastMsg] = useState<string | null>(null);
   const [formState, setFormState] = useState<FormDef | null>(null);
   const [m, setM] = useState<ModalDef | null>(null);
+  const [dbStatus, setDbStatus] = useState<DbStatus>(isSupabaseConfigured ? "connecting" : "local");
   const toastTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const prevRef = useRef<Data | null>(null);
   const sourcedRef = useRef(false);
@@ -87,9 +92,13 @@ export function AppProvider({ children }: { children: ReactNode }) {
           } else {
             d = buildSeed();
           }
+          if (!cancelled) setDbStatus("connected");
         } catch (e) {
           console.warn("[supabase] load failed, using local cache", e);
+          if (!cancelled) setDbStatus("error");
         }
+      } else {
+        if (!cancelled) setDbStatus("local");
       }
       if (!d) {
         try {
@@ -115,14 +124,26 @@ export function AppProvider({ children }: { children: ReactNode }) {
     if (!S) return;
     mirrorLocal(S);
     const prev = prevRef.current;
+    let changed: (keyof Data)[] = [];
     if (!prev) {
-      if (!sourcedRef.current) void persistKeys(S, KEYS);
+      if (!sourcedRef.current) changed = KEYS;
     } else {
-      const changed = KEYS.filter((k) => JSON.stringify(prev[k]) !== JSON.stringify(S[k]));
-      if (changed.length) void persistKeys(S, changed);
+      changed = KEYS.filter((k) => JSON.stringify(prev[k]) !== JSON.stringify(S[k]));
     }
     prevRef.current = S;
+    if (changed.length && isSupabaseConfigured) {
+      void persistKeys(S, changed).then((ok) => setDbStatus(ok ? "connected" : "error"));
+    }
   }, [S]);
+
+  const checkDb = () => {
+    if (!isSupabaseConfigured) {
+      setDbStatus("local");
+      return;
+    }
+    setDbStatus("connecting");
+    void pingDatabase().then((ok) => setDbStatus(ok ? "connected" : "error"));
+  };
 
   const showToast = (msg: string) => {
     setToastMsg(msg);
@@ -164,7 +185,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
     else el.setAttribute("data-theme", theme);
   }, [theme]);
 
-  const value: AppCtx = { S, linked: isSupabaseConfigured, update, toast: showToast, notify, modal, form, close, reset };
+  const value: AppCtx = { S, linked: isSupabaseConfigured, dbStatus, checkDb, update, toast: showToast, notify, modal, form, close, reset };
 
   return (
     <Ctx.Provider value={value}>

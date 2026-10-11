@@ -162,8 +162,9 @@ export async function databaseLoad(): Promise<Data> {
 }
 
 /** Write the given top-level keys back to their tables (wipe + reinsert). */
-export async function persistKeys(d: Data, keys: (keyof Data)[]): Promise<void> {
-  if (!isSupabaseConfigured || !supabase) return;
+export async function persistKeys(d: Data, keys: (keyof Data)[]): Promise<boolean> {
+  if (!isSupabaseConfigured || !supabase) return true;
+  let ok = true;
   for (const k of keys) {
     const table = TABLE[k];
     const rows = rowsFor(k, d);
@@ -174,7 +175,20 @@ export async function persistKeys(d: Data, keys: (keyof Data)[]): Promise<void> 
       }
     } catch (e) {
       // Network/RLS failures must never break the UI; localStorage keeps a mirror.
+      ok = false;
       console.warn(`[supabase] failed to sync "${table}"`, e);
     }
+  }
+  return ok;
+}
+
+/** Lightweight connectivity check against the database. */
+export async function pingDatabase(): Promise<boolean> {
+  if (!isSupabaseConfigured || !supabase) return false;
+  try {
+    const { error } = await supabase.from("settings").select("id").limit(1);
+    return !error;
+  } catch {
+    return false;
   }
 }

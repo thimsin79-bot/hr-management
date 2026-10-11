@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import { useApp } from "@/components/providers/AppProvider";
 
 export default function Settings() {
-  const { S, linked, update, reset } = useApp();
+  const { S, dbStatus, checkDb, update, reset } = useApp();
   if (!S) return null;
 
   const setV = (k: string, val: string) =>
@@ -60,10 +60,20 @@ export default function Settings() {
         )}
         {row(
           "Database",
-          linked
+          dbStatus === "connected"
             ? "Connected to Supabase. Changes are saved to your cloud database."
-            : "Not connected. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to sync.",
-          <span className={"pill " + (linked ? "ok" : "mute")}>{linked ? "Supabase" : "Local only"}</span>
+            : dbStatus === "error"
+              ? "Could not reach Supabase. Working from local cache; click to retry."
+              : dbStatus === "connecting"
+                ? "Checking the database connection…"
+                : "Not connected. Set NEXT_PUBLIC_SUPABASE_URL and NEXT_PUBLIC_SUPABASE_ANON_KEY to sync.",
+          <button
+            type="button"
+            className={"pill " + (dbStatus === "connected" ? "ok" : dbStatus === "error" ? "bad" : dbStatus === "connecting" ? "warn" : "mute")}
+            onClick={checkDb}
+          >
+            {dbStatus === "connected" ? "Supabase" : dbStatus === "error" ? "Offline" : dbStatus === "connecting" ? "Connecting…" : "Local only"}
+          </button>
         )}
         {row("Sample data", "Restore the starting employees and requests. This removes your changes.", (
           <button className="btn bad" onClick={doReset}>
