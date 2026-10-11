@@ -85,13 +85,8 @@ export function AppProvider({ children }: { children: ReactNode }) {
       let d: Data | null = null;
       if (isSupabaseConfigured) {
         try {
-          const remote = await databaseLoad();
-          if (remote.emps.length || Object.keys(remote.heads).length) {
-            d = remote;
-            sourcedRef.current = true;
-          } else {
-            d = buildSeed();
-          }
+          d = await databaseLoad();
+          sourcedRef.current = true;
           if (!cancelled) setDbStatus("connected");
         } catch (e) {
           console.warn("[supabase] load failed, using local cache", e);

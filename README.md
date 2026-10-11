@@ -67,12 +67,16 @@ supabase/
 
 ## How data works
 
-State lives in a single object. On load it tries Supabase first (when configured),
-then falls back to `localStorage` (key `peopledesk_v2`), then the sample dataset.
-Writes are mirrored to `localStorage` and, when connected, synced to Supabase by
-diffing changed sections and writing them back.
+State lives in a single object. When Supabase is configured it is the source of
+truth: the app loads whatever is in the cloud database and uses it as-is — an empty
+database stays empty (no sample data is pushed automatically). If Supabase is not
+configured or the load fails, the app falls back to `localStorage` (key
+`peopledesk_v2`) and then the sample dataset. Writes are mirrored to `localStorage`
+and, when connected, synced to Supabase by diffing changed sections and writing them
+back.
 
-`Settings → Reset sample data` restores the sample set.
+`Settings → Reset sample data` loads the sample set locally and, when connected,
+syncs it to Supabase.
 
 ## Supabase setup
 
@@ -85,7 +89,8 @@ diffing changed sections and writing them back.
    NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR-ANON-PUBLIC-KEY
    ```
 
-4. Restart `npm run dev`. The sample data is pushed to Supabase on first run; the
+4. Restart `npm run dev`. The app loads the cloud database as-is (an empty database
+   stays empty); use `Settings → Reset sample data` to load the sample set. The
    **Settings** page shows whether the cloud database is connected.
 
 The schema enables Row Level Security with open `anon` policies so the client can read
