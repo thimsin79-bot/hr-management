@@ -150,7 +150,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
   const update = (fn: (d: Data) => void, msg?: string) => {
     setS((prev) => {
       if (!prev) return prev;
-      const d: Data = { ...prev };
+      const d = JSON.parse(JSON.stringify(prev)) as Data;
       fn(d);
       return d;
     });
