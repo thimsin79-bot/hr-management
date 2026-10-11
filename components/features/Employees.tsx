@@ -41,6 +41,8 @@ export default function Employees() {
         <dd>{fdate(e.dob)}</dd>
         <dt>Nationality</dt>
         <dd>{dash(e.nationality)}</dd>
+        <dt>Qualification</dt>
+        <dd>{dash(e.qualification)}</dd>
         <dt>ID No</dt>
         <dd>{dash(e.idNo)}</dd>
         <dt>Contact number</dt>
@@ -88,6 +90,7 @@ export default function Employees() {
         { k: "gender", label: "Gender", type: "select", o: GENDERS },
         { k: "dob", label: "Date of birth", type: "date" },
         { k: "nationality", label: "Nationality" },
+        { k: "qualification", label: "Qualification" },
         { k: "idNo", label: "ID No" },
         { k: "contact", label: "Contact number" },
         { k: "placeOfBirth", label: "Place of birth" },
@@ -113,6 +116,7 @@ export default function Employees() {
             gender: v.gender,
             dob: v.dob,
             nationality: v.nationality,
+            qualification: v.qualification,
             idNo: v.idNo,
             contact: v.contact,
             placeOfBirth: v.placeOfBirth,

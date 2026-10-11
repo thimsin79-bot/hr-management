@@ -17,6 +17,7 @@ export type Emp = {
   contact?: string;
   placeOfBirth?: string;
   address?: string;
+  qualification?: string;
 };
 
 export type Leave = {

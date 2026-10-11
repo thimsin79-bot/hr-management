@@ -66,6 +66,7 @@ function rowsFor(k: keyof Data, d: Data): Record<string, unknown>[] {
         contact: e.contact ?? "",
         place_of_birth: e.placeOfBirth ?? "",
         address: e.address ?? "",
+        qualification: e.qualification ?? "",
       }));
     case "heads":
       return Object.entries(d.heads).map(([name, head]) => ({ name, head }));
@@ -154,6 +155,7 @@ export async function databaseLoad(): Promise<Data> {
       contact: (r.contact as string) ?? "",
       placeOfBirth: (r.place_of_birth as string) ?? "",
       address: (r.address as string) ?? "",
+      qualification: (r.qualification as string) ?? "",
     })),
     heads: Object.fromEntries((departments || []).map(r => [r.name as string, r.head as number])),
     leaves: ((leaves || []) as unknown as Leave[]).map(l => ({ ...l })),
