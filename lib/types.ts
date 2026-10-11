@@ -20,6 +20,15 @@ export type Emp = {
   qualification?: string;
 };
 
+export type User = {
+  id: number;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+  created: string;
+};
+
 export type Leave = {
   id: number;
   emp: number;
@@ -83,6 +92,7 @@ export type AppSettings = {
 
 export type Data = {
   emps: Emp[];
+  users: User[];
   heads: Record<string, number>;
   leaves: Leave[];
   jobs: Job[];

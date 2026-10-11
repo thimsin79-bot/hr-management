@@ -16,7 +16,7 @@ import type { Data } from "../../lib/types";
 import { nid } from "../../lib/utils";
 
 const KEYS: (keyof Data)[] = [
-  "emps", "heads", "leaves", "jobs", "stages", "cands", "onb", "att", "payroll",
+  "emps", "users", "heads", "leaves", "jobs", "stages", "cands", "onb", "att", "payroll",
   "perf", "courses", "assign", "plans", "enrol", "docs", "cases", "off", "notes", "set",
 ];
 

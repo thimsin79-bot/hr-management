@@ -16,10 +16,12 @@ import Relations from "./Relations";
 import Reports from "./Reports";
 import Settings from "./Settings";
 import Training from "./Training";
+import Users from "./Users";
 
 export const VIEWS: Record<string, ComponentType> = {
   dashboard: Dashboard,
   employees: Employees,
+  users: Users,
   organization: Organization,
   recruitment: Recruitment,
   onboarding: Onboarding,

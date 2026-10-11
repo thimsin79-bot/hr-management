@@ -1,8 +1,9 @@
 import { isSupabaseConfigured, supabase } from "./supabase";
-import type { Data, Doc, Leave, Job, Cand, Onb, Perf, Course, Assign, Plan, Case, Off, Note } from "./types";
+import type { Data, Doc, Leave, Job, Cand, Onb, Perf, Course, Assign, Plan, Case, Off, Note, User } from "./types";
 
 const TABLE: Record<keyof Data, string> = {
   emps: "employees",
+  users: "users",
   heads: "departments",
   leaves: "leaves",
   jobs: "jobs",
@@ -26,6 +27,7 @@ const TABLE: Record<keyof Data, string> = {
 /** Column used as a never-matching delete filter so we can wipe a table safely. */
 const DELETE_COL: Record<keyof Data, string> = {
   emps: "id",
+  users: "id",
   heads: "name",
   leaves: "id",
   jobs: "id",
@@ -68,6 +70,8 @@ function rowsFor(k: keyof Data, d: Data): Record<string, unknown>[] {
         address: e.address ?? "",
         qualification: e.qualification ?? "",
       }));
+    case "users":
+      return d.users.map(u => ({ ...u }));
     case "heads":
       return Object.entries(d.heads).map(([name, head]) => ({ name, head }));
     case "leaves":
@@ -114,6 +118,7 @@ export async function databaseLoad(): Promise<Data> {
   const d = (
     await Promise.all([
       supabase.from("employees").select("*"),
+      supabase.from("users").select("*"),
       supabase.from("departments").select("*"),
       supabase.from("leaves").select("*"),
       supabase.from("jobs").select("*"),
@@ -135,7 +140,7 @@ export async function databaseLoad(): Promise<Data> {
     ])
   ).map(r => r.data as Record<string, unknown>[] | null);
 
-  const [employees, departments, leaves, jobs, stages, candidates, onboarding, attendance, payroll, performance, courses, assignments, plans, enrolments, documents, cases, offboarding, notes, settings] = d;
+  const [employees, users, departments, leaves, jobs, stages, candidates, onboarding, attendance, payroll, performance, courses, assignments, plans, enrolments, documents, cases, offboarding, notes, settings] = d;
 
   return {
     emps: ((employees || []) as Record<string, unknown>[]).map(r => ({
@@ -156,6 +161,14 @@ export async function databaseLoad(): Promise<Data> {
       placeOfBirth: (r.place_of_birth as string) ?? "",
       address: (r.address as string) ?? "",
       qualification: (r.qualification as string) ?? "",
+    })),
+    users: ((users || []) as unknown as User[]).map(u => ({
+      id: u.id,
+      name: u.name,
+      email: u.email ?? "",
+      role: u.role ?? "",
+      status: u.status ?? "Active",
+      created: u.created ?? "",
     })),
     heads: Object.fromEntries((departments || []).map(r => [r.name as string, r.head as number])),
     leaves: ((leaves || []) as unknown as Leave[]).map(l => ({ ...l })),
