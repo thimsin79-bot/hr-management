@@ -10,6 +10,13 @@ export type Emp = {
   start: string;
   salary: number;
   email: string;
+  gender?: string;
+  dob?: string;
+  nationality?: string;
+  idNo?: string;
+  contact?: string;
+  placeOfBirth?: string;
+  address?: string;
 };
 
 export type Leave = {

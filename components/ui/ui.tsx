@@ -20,12 +20,13 @@ export function Avatar({ e }: { e: Emp }) {
 }
 
 export function Person({ e, sub }: { e: Emp; sub?: string }) {
+  const line = sub == null ? e.role : sub;
   return (
     <div className="who">
       <Avatar e={e} />
       <div>
         <b>{e.name}</b>
-        <small>{sub == null ? e.role : sub}</small>
+        {line ? <small>{line}</small> : null}
       </div>
     </div>
   );

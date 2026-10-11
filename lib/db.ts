@@ -1,5 +1,5 @@
 import { isSupabaseConfigured, supabase } from "./supabase";
-import type { Data, Doc, Leave, Job, Cand, Onb, Perf, Course, Assign, Plan, Case, Off, Note, Emp } from "./types";
+import type { Data, Doc, Leave, Job, Cand, Onb, Perf, Course, Assign, Plan, Case, Off, Note } from "./types";
 
 const TABLE: Record<keyof Data, string> = {
   emps: "employees",
@@ -49,7 +49,24 @@ const DELETE_COL: Record<keyof Data, string> = {
 function rowsFor(k: keyof Data, d: Data): Record<string, unknown>[] {
   switch (k) {
     case "emps":
-      return d.emps.map(e => ({ ...e }));
+      return d.emps.map(e => ({
+        id: e.id,
+        name: e.name,
+        role: e.role,
+        dept: e.dept,
+        type: e.type,
+        status: e.status,
+        start: e.start || null,
+        salary: e.salary,
+        email: e.email || null,
+        gender: e.gender ?? "",
+        dob: e.dob || null,
+        nationality: e.nationality ?? "",
+        id_no: e.idNo ?? "",
+        contact: e.contact ?? "",
+        place_of_birth: e.placeOfBirth ?? "",
+        address: e.address ?? "",
+      }));
     case "heads":
       return Object.entries(d.heads).map(([name, head]) => ({ name, head }));
     case "leaves":
@@ -120,10 +137,23 @@ export async function databaseLoad(): Promise<Data> {
   const [employees, departments, leaves, jobs, stages, candidates, onboarding, attendance, payroll, performance, courses, assignments, plans, enrolments, documents, cases, offboarding, notes, settings] = d;
 
   return {
-    emps: ((employees || []) as unknown as Emp[]).map(e => ({
-      ...e,
-      start: e.start ?? "",
-      email: e.email ?? "",
+    emps: ((employees || []) as Record<string, unknown>[]).map(r => ({
+      id: r.id as number,
+      name: r.name as string,
+      role: (r.role as string) ?? "",
+      dept: (r.dept as string) ?? "",
+      type: (r.type as string) ?? "",
+      status: (r.status as string) ?? "Active",
+      start: (r.start as string) ?? "",
+      salary: (r.salary as number) ?? 0,
+      email: (r.email as string) ?? "",
+      gender: (r.gender as string) ?? "",
+      dob: (r.dob as string) ?? "",
+      nationality: (r.nationality as string) ?? "",
+      idNo: (r.id_no as string) ?? "",
+      contact: (r.contact as string) ?? "",
+      placeOfBirth: (r.place_of_birth as string) ?? "",
+      address: (r.address as string) ?? "",
     })),
     heads: Object.fromEntries((departments || []).map(r => [r.name as string, r.head as number])),
     leaves: ((leaves || []) as unknown as Leave[]).map(l => ({ ...l })),

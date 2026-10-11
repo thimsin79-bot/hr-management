@@ -3,20 +3,10 @@ import { emailFrom } from "./utils";
 
 export function buildSeed(): Data {
   const E = [
-    [1, "Alice Johnson", "Software Engineer", "Engineering", "Full-time", "Active", "2023-01-15", 85000],
-    [2, "Bob Smith", "Product Manager", "Product", "Full-time", "Active", "2022-06-01", 95000],
-    [3, "Carol Lee", "UI Designer", "Design", "Full-time", "Active", "2024-03-10", 78000],
-  ].map((a) => ({
-    id: a[0] as number,
-    name: a[1] as string,
-    role: a[2] as string,
-    dept: a[3] as string,
-    type: a[4] as string,
-    status: a[5] as string,
-    start: a[6] as string,
-    salary: a[7] as number,
-    email: emailFrom(a[1] as string),
-  }));
+    { id: 1, name: "Alice Johnson", role: "Software Engineer", dept: "Engineering", type: "Full-time", status: "Active", start: "2023-01-15", salary: 85000, gender: "Female", dob: "1992-04-18", nationality: "American", idNo: "US-8842190", contact: "+1 415 555 0132", placeOfBirth: "Seattle, USA", address: "128 Pine St, San Francisco, CA" },
+    { id: 2, name: "Bob Smith", role: "Product Manager", dept: "Product", type: "Full-time", status: "Active", start: "2022-06-01", salary: 95000, gender: "Male", dob: "1988-11-02", nationality: "British", idNo: "GB-3391048", contact: "+44 20 7946 0958", placeOfBirth: "Manchester, UK", address: "45 Camden Rd, London" },
+    { id: 3, name: "Carol Lee", role: "UI Designer", dept: "Design", type: "Full-time", status: "Active", start: "2024-03-10", salary: 78000, gender: "Female", dob: "1995-07-27", nationality: "Singaporean", idNo: "SG-1188204", contact: "+65 8123 4456", placeOfBirth: "Singapore", address: "12 Tanjong Pagar Rd, Singapore" },
+  ].map((a) => ({ ...a, email: emailFrom(a.name) }));
 
   return {
     emps: E,
