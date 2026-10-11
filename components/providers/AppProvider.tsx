@@ -42,6 +42,7 @@ export type FieldDef = {
   type?: string;
   v?: string | number;
   o?: FieldOpt[];
+  full?: boolean;
 };
 export type FormDef = {
   title: string;
@@ -250,17 +251,19 @@ function FormDialog({ form, onCancel, toast }: { form: FormDef; onCancel: () => 
 
   const set = (k: string, v: string) => setVals((p) => ({ ...p, [k]: v }));
 
+  const wide = form.fields.length > 6;
+
   return (
-    <div className="dlg">
+    <div className={"dlg" + (wide ? " wide" : "")}>
       <div className="mh">
         <h3>{form.title}</h3>
         <button className="x" onClick={onCancel} aria-label="Close">
           {"\u2715"}
         </button>
       </div>
-      <div className="mb">
+      <div className={"mb" + (wide ? " cols2" : "")}>
         {form.fields.map((f) => (
-          <label key={f.k}>
+          <label key={f.k} className={f.full ? "full" : undefined}>
             {f.label}
             {f.req ? " *" : ""}
             {f.type === "select" ? (

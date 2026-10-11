@@ -91,7 +91,7 @@ export default function Employees() {
         { k: "idNo", label: "ID No" },
         { k: "contact", label: "Contact number" },
         { k: "placeOfBirth", label: "Place of birth" },
-        { k: "address", label: "Current address" },
+        { k: "address", label: "Current address", full: true },
         { k: "dept", label: "Department", type: "select", o: DEPTS },
         { k: "type", label: "Employment type", type: "select", o: ["Full-time", "Part-time", "Contract"] },
         { k: "salary", label: "Annual salary (USD)", type: "number", v: "60000", req: true },
