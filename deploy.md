@@ -1,15 +1,12 @@
 # Deployment Guide
 
 This document walks through getting **People Desk** (an HR management app in a single `hr-management.html`) live on Vercel.
-
-## Architecture
-
 ```
+index.html           root entry that opens the dashboard
 hr-management.html   the whole app (HTML/CSS/JS, data in localStorage)
-api/vercel.js        Vercel serverless function that serves the HTML
-vercel.json          routes every path to the function
 ```
 
+Because there is no build step or backend requirement, Vercel serves the static files directly. The root `index.html` redirects to `hr-management.html` so the project URL does not produce a 404.
 Because there is no build step and no backend API, deployment is trivial. `api/vercel.js` reads `hr-management.html` and returns it; `vercel.json` maps all routes to that function.
 
 > Note: Vercel only auto-detects serverless functions inside `/api`. Older versions of this repo placed the function at the root, which produced a 404 — keep it in `api/`.
@@ -27,7 +24,7 @@ Because there is no build step and no backend API, deployment is trivial. `api/v
 npx serve .
 ```
 
-Open `http://localhost:3000/hr-management.html`. All data is stored in the browser's `localStorage` under the key `peopledesk_v2`, so nothing needs a server.
+Open `http://localhost:3000/`. All data is stored in the browser's `localStorage` under the key `peopledesk_v2`, so nothing needs a server.
 
 ## 2. Push to GitHub
 
@@ -67,7 +64,7 @@ The output is committed to `.vercel/` locally, which is ignored by git.
 
 1. Log in to the Vercel dashboard → **Add New Project**.
 2. Import the `hr-management` GitHub repo.
-3. Accept the defaults (Framework Preset: **Other**, Build Command: none, Output Directory: none). Vercel detects `vercel.json` and uses the function automatically.
+3. Accept the defaults (Framework Preset: **Other**, Build Command: none, Output Directory: none). Vercel serves the static files automatically.
 4. Click **Deploy**.
 
 From then on, every push to the default branch triggers an automatic production deployment. Preview deployments are created for each pull request.

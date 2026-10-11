@@ -1,3 +1,13 @@
 .vercel/
 node_modules/
 *.log
+
+# env (never commit real keys)
+.env
+.env*.local
+
+# next.js
+/.next/
+/out/
+*.tsbuildinfo
+next-env.d.ts

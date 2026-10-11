@@ -4,8 +4,5 @@
     "api/vercel.js": {
       "runtime": "nodejs20.x"
     }
-  },
-  "routes": [
-    { "src": "/(.*)", "dest": "/api/vercel.js" }
-  ]
+  }
 }
