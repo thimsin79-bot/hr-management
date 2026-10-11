@@ -59,7 +59,7 @@ export default function Employees() {
         <dd>{e.email}</dd>
         <dt>Start date</dt>
         <dd>{fdate(e.start)}</dd>
-        <dt>Annual salary</dt>
+        <dt>Monthly salary</dt>
         <dd>{money(e.salary)}</dd>
       </dl>,
       <>
@@ -94,7 +94,7 @@ export default function Employees() {
         { k: "address", label: "Current address", full: true },
         { k: "dept", label: "Department", type: "select", o: DEPTS },
         { k: "type", label: "Employment type", type: "select", o: ["Full-time", "Part-time", "Contract"] },
-        { k: "salary", label: "Annual salary (USD)", type: "number", v: "60000", req: true },
+        { k: "salary", label: "Monthly salary (USD)", type: "number", v: "6000", req: true },
         { k: "start", label: "Start date", type: "date", v: TODAY },
       ],
       (v) => {

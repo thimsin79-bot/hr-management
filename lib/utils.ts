@@ -67,7 +67,7 @@ export const stKind = (s: string) => (({ Active: "ok", Probation: "warn", "On le
 
 export const activeEmps = (S: Data) => S.emps.filter((e) => !S.off.some((o) => o.emp === e.id && o.last < TODAY));
 
-export const gross = (e: Emp) => e.salary / 12;
+export const gross = (e: Emp) => e.salary;
 
 export function emailFrom(name: string) {
   return (
