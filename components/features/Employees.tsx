@@ -1,14 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { useApp } from "@/components/providers/AppProvider";
+import { useApp, type FieldDef } from "@/components/providers/AppProvider";
 import { Empty, Person, Pill } from "@/components/ui/ui";
 import { useStartOffboard } from "@/components/features/offboardForm";
 import { DEFAULT_ONB, DEPTS, TODAY } from "@/lib/constants";
+import type { Emp } from "@/lib/types";
 import { emailFrom, empAt, estatus, fdate, money, nid, stKind } from "@/lib/utils";
 
 const GENDERS = ["Male", "Female", "Other"];
+const TYPES = ["Full-time", "Part-time", "Contract"];
 const dash = (s?: string) => (s && s.trim() ? s : "\u2013");
+
+const empFields = (e?: Emp): FieldDef[] => [
+  { k: "name", label: "Full name", req: true, v: e?.name },
+  { k: "role", label: "Job title", req: true, v: e?.role },
+  { k: "gender", label: "Gender", type: "select", o: GENDERS, v: e?.gender },
+  { k: "dob", label: "Date of birth", type: "date", v: e?.dob },
+  { k: "nationality", label: "Nationality", v: e?.nationality },
+  { k: "qualification", label: "Qualification", v: e?.qualification },
+  { k: "idNo", label: "ID No", v: e?.idNo },
+  { k: "contact", label: "Contact number", v: e?.contact },
+  { k: "placeOfBirth", label: "Place of birth", v: e?.placeOfBirth },
+  { k: "address", label: "Current address", full: true, v: e?.address },
+  { k: "dept", label: "Department", type: "select", o: DEPTS, v: e?.dept },
+  { k: "type", label: "Employment type", type: "select", o: TYPES, v: e?.type },
+  { k: "salary", label: "Monthly salary (USD)", type: "number", v: e?.salary ?? "6000", req: true },
+  { k: "start", label: "Start date", type: "date", v: e?.start ?? TODAY },
+];
 
 export default function Employees() {
   const { S, update, modal, close, form, notify } = useApp();
@@ -66,6 +85,15 @@ export default function Employees() {
       </dl>,
       <>
         <button
+          className="btn"
+          onClick={() => {
+            close();
+            editEmployee(e);
+          }}
+        >
+          Edit
+        </button>
+        <button
           className="btn bad"
           onClick={() => {
             close();
@@ -84,22 +112,7 @@ export default function Employees() {
   const addEmployee = () =>
     form(
       "Add employee",
-      [
-        { k: "name", label: "Full name", req: true },
-        { k: "role", label: "Job title", req: true },
-        { k: "gender", label: "Gender", type: "select", o: GENDERS },
-        { k: "dob", label: "Date of birth", type: "date" },
-        { k: "nationality", label: "Nationality" },
-        { k: "qualification", label: "Qualification" },
-        { k: "idNo", label: "ID No" },
-        { k: "contact", label: "Contact number" },
-        { k: "placeOfBirth", label: "Place of birth" },
-        { k: "address", label: "Current address", full: true },
-        { k: "dept", label: "Department", type: "select", o: DEPTS },
-        { k: "type", label: "Employment type", type: "select", o: ["Full-time", "Part-time", "Contract"] },
-        { k: "salary", label: "Monthly salary (USD)", type: "number", v: "6000", req: true },
-        { k: "start", label: "Start date", type: "date", v: TODAY },
-      ],
+      empFields(),
       (v) => {
         update((d) => {
           const id = nid(d.emps);
@@ -126,6 +139,34 @@ export default function Employees() {
           notify(v.name + " was added and onboarding has started.", "onboarding");
         }, v.name + " added");
       }
+    );
+
+  const editEmployee = (e: Emp) =>
+    form(
+      "Edit employee",
+      empFields(e),
+      (v) => {
+        update((d) => {
+          const t = d.emps.find((x) => x.id === e.id);
+          if (!t) return;
+          t.name = v.name;
+          t.role = v.role;
+          t.dept = v.dept;
+          t.type = v.type;
+          t.start = v.start;
+          t.salary = +v.salary || 0;
+          t.email = emailFrom(v.name);
+          t.gender = v.gender;
+          t.dob = v.dob;
+          t.nationality = v.nationality;
+          t.qualification = v.qualification;
+          t.idNo = v.idNo;
+          t.contact = v.contact;
+          t.placeOfBirth = v.placeOfBirth;
+          t.address = v.address;
+        }, e.name + " updated");
+      },
+      "Save changes"
     );
 
   return (
