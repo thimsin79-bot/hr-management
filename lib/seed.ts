@@ -11,7 +11,7 @@ export function buildSeed(): Data {
   return {
     emps: E,
     users: [
-      { id: 1, name: "Alice Johnson", email: "admin@northwind.example", role: "Admin", status: "Active", created: "2026-09-01" },
+      { id: 1, name: "Admin", email: "admin@people.desk", role: "Admin", status: "Active", created: "2026-09-01", password: "admin123" },
     ],
     heads: {},
     leaves: [],

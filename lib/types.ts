@@ -27,6 +27,7 @@ export type User = {
   role: string;
   status: string;
   created: string;
+  password?: string;
 };
 
 export type Leave = {

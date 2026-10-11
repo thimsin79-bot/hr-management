@@ -27,6 +27,10 @@ const empFields = (e?: Emp): FieldDef[] => [
   { k: "type", label: "Employment type", type: "select", o: TYPES, v: e?.type },
   { k: "salary", label: "Monthly salary (USD)", type: "number", v: e?.salary ?? "6000", req: true },
   { k: "start", label: "Start date", type: "date", v: e?.start ?? TODAY },
+  { k: "email", label: "Email", type: "email", v: e?.email, req: true },
+  { k: "contact", label: "Contact", v: e?.contact },
+  { k: "address", label: "Address", v: e?.address },
+  
 ];
 
 export default function Employees() {

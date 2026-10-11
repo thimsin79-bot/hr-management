@@ -14,6 +14,7 @@ const dash = (s?: string) => (s && s.trim() ? s : "\u2013");
 const userFields = (u?: User): FieldDef[] => [
   { k: "name", label: "Full name", req: true, v: u?.name },
   { k: "email", label: "Email", type: "email", req: true, v: u?.email },
+  { k: "password", label: "Password", type: "password", req: true, v: u?.password },
   { k: "role", label: "Role", type: "select", o: ROLES, v: u?.role },
   { k: "status", label: "Status", type: "select", o: STATUSES, v: u?.status },
 ];
@@ -86,6 +87,7 @@ export default function Users() {
             role: v.role,
             status: v.status,
             created: TODAY,
+            password: v.password,
           });
           notify(v.name + " was added as a " + v.role + ".", "users");
         }, v.name + " created");
@@ -105,6 +107,7 @@ export default function Users() {
           t.email = v.email;
           t.role = v.role;
           t.status = v.status;
+          t.password = v.password;
         }, u.name + " updated");
       },
       "Save changes"
