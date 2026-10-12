@@ -48,6 +48,16 @@ courses, assignments, plans, enrolments, documents, cases, offboarding, notes, s
 
 ## Work log
 
+### 2026-10-12 — Fix login page (standalone + native design)
+- Root cause: `app/login/page.tsx` was styled entirely with **Tailwind utility classes**, but Tailwind is not installed
+  (no `tailwind` dep, no `postcss.config`, `globals.css` has no `@tailwind`) — so the form rendered unstyled.
+  It was also wrapped by `Shell`, so the sidebar/topbar chrome (topbar title "Not found") showed around it.
+- `components/layout/Shell.tsx`: early-return `children` for `path === "/login"` — login renders outside the app chrome.
+- `app/login/page.tsx`: restyled with app-native CSS (`btn`, labels wired via `htmlFor`, autocomplete hints).
+- `app/globals.css`: added `.login*` classes using existing tokens (`--surface`, `--line`, `--muted`, `--accent`,
+  Bricolage Grotesque) + brand mark.
+- Verified: `npm run lint` and `npm run build` pass.
+
 ### 2026-10-11 — Employees overhaul, persistence fix, Users module
 Commits (oldest→newest):
 - `287928c` Simplify default seed to 3 employees

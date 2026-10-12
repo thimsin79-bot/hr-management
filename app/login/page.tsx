@@ -38,42 +38,41 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 px-4">
-      <form onSubmit={onSubmit} className="w-full max-w-sm bg-white border rounded-xl shadow-sm p-6 space-y-4">
-        <div className="text-center space-y-1">
-          <h1 className="text-xl font-semibold">People Desk Login</h1>
-          <p className="text-xs text-slate-500">Use only username & password</p>
+    <div className="login">
+      <form onSubmit={onSubmit} className="login-card">
+        <div className="login-brand">
+          <div className="mark">P</div>
+          <h1>People Desk</h1>
+          <p>Sign in with your username and password</p>
         </div>
-        <div className="space-y-2">
-          <label className="text-sm text-slate-600">Username</label>
+        <div className="login-field">
+          <label htmlFor="username">Username</label>
           <input
+            id="username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 text-sm"
             placeholder="e.g. Admin"
+            autoComplete="username"
             required
             autoFocus
           />
         </div>
-        <div className="space-y-2">
-          <label className="text-sm text-slate-600">Password</label>
+        <div className="login-field">
+          <label htmlFor="password">Password</label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full border rounded-lg px-3 py-2 text-sm"
             placeholder="Enter password"
+            autoComplete="current-password"
             required
           />
         </div>
-        <button
-          type="submit"
-          disabled={loading}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white rounded-lg px-3 py-2 text-sm disabled:opacity-60"
-        >
+        <button type="submit" disabled={loading} className="btn login-btn">
           {loading ? "Signing in..." : "Login"}
         </button>
-        <p className="text-xs text-center text-slate-400">Default: Admin / admin123</p>
+        <p className="login-hint">Default: Admin / admin123</p>
       </form>
     </div>
   )

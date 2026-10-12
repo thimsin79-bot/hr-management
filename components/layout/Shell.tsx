@@ -11,6 +11,8 @@ export function Shell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => setOpen(false), [path]);
 
+  if (path === "/login") return <>{children}</>;
+
   return (
     <div className="app">
       <Sidebar open={open} onNavigate={() => setOpen(false)} />
