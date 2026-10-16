@@ -75,5 +75,5 @@ Verified: anon write path (delete/insert/select) works; deep-clone diff simulati
 
 ## Open items / notes
 - Cloud DB currently has **no data** (intentionally emptied). "Reset sample data" seeds 3 employees + 1 admin user.
-- Legacy `hr-management.html` and `deploy.md` still describe the old static build — not in use by the Next app.
+- Legacy static-era files (`hr-management.html`, `index.html`, `api/vercel.js`, `deploy.md`) removed; the Next.js app is the sole implementation.
 - Not yet built: real authentication (Users here are records, not logins), password/invite flow.

@@ -96,13 +96,6 @@ syncs it to Supabase.
 The schema enables Row Level Security with open `anon` policies so the client can read
 and write. Tighten these policies (or add Supabase Auth) before using real data.
 
-## Legacy single-file app
-
-The original no-dependency prototype is still at `hr-management.html` (from before
-the Next.js migration). The Next.js app is now the active implementation; the
-`index.html`/`api/vercel.js`/`vercel.json`/`deploy.md` files are leftovers from that
-prototype deployment and can be deleted once you are happy with the migration.
-
 ## Deploying
 
 The project is a standard Next.js app and deploys directly to Vercel: push the repo
